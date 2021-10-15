@@ -17,6 +17,7 @@
 library(readxl)
 library(tidyverse) # Data wrangling
 library(janitor)   # Deduplication
+library(stringr)
 
 # Creating Directories
 ## Output
@@ -48,3 +49,30 @@ colnames_mir <- unite(possible_colnames, colnames, c("subject", "function"))
 
 mir <- colnames()
 
+# Changing to a long format (NEEDS A MORE ELEGANT SOLUTION!!)
+mismatch_included_title <- mir %>%
+  select(affective_disorder_title, addictive_disorder_title, anxiety_title) %>%
+  pivot_longer(
+    cols = ends_with("title"),
+    names_to = "intended_subject",
+    values_to = "title")
+
+mismatch_included_DOI <- mir %>%
+  select(affective_disorder_DOI, addictive_disorder_DOI, anxiety_DOI) %>%
+  pivot_longer(
+    cols = ends_with("DOI"),
+    names_to = "intended_subject",
+    values_to = "DOI") 
+
+mismatch_included_source <- mir %>%
+  select(affective_disorder_source, addictive_disorder_source, anxiety_source) %>%
+  pivot_longer(
+    cols = ends_with("source"),
+    names_to = "intended_subject",
+    values_to = "source")
+
+mismatch_included <- mutate(mismatch_included_title, mismatch_included_DOI, mismatch_included_source)
+
+# Removing 'DOI:':
+mismatch_included <- mismatch_included %>%
+  mutate_at("DOI", str_replace, "DOI:", "")
