@@ -96,3 +96,58 @@ tail(mismatch_included)
 mismatch_included <- mismatch_included %>%
   mutate_at("doi", str_replace, "^\\D+", "")
 
+# Converting inteded_subject to factors
+mismatch_included[mismatch_included == "affective_disorder"] <- 1
+mismatch_included[mismatch_included == "addictive_disorders"] <- 2
+mismatch_included[mismatch_included == "anxiety"] <- 3
+
+mismatch_included$intended_subject <- as.numeric(mismatch_included$intended_subject)
+
+
+###################################
+## Preparing megameta_dataset ##
+###################################
+
+# Creating collumns with the origin subject
+depression$origin_subject <- 1
+substance$origin_subject <- 2
+anxiety$origin_subject <- 3
+
+# Merging the datasets
+df <- bind_rows(depression, substance, anxiety)
+
+# Creating collumns for the three subjects with their in-/exclusions (39+i needs to be changed in names to prevent mistakes with a different dataset)
+df$depression_included <- 0
+df$substance_included <- 0
+df$anxiety_included <- 0
+
+for(j in 1:length(df$depression_included)){
+  for(i in 1:3){
+    if(df$included[j] == 1 & df$origin_subject[j] == i & !is.na(df$included[j])){df[j,39+i] <- 1}
+  }
+}
+
+# Adding intended inclusions (needs work)
+# for(k in 1:3){
+#   for(i in 1:length(mismatch_included$intended_subject)){
+#   for(j in 1:length(df$depression_included)){
+#     if(mismatch_included$intended_subject[i] == k){
+#       if(duplicated(mismatch_included$doi[i], df$doi[j]) == TRUE){df[j,39+k] <- 1}
+#     }
+#   }
+# }
+# }
+
+# Removing duplicates (needs work)
+
+# Adding an index
+df$index <- 1:length(df$depression_included)
+
+# Creating the final_included collumn
+df$final_included <- 0
+for(i in 1:length(df$depression_included)){
+  if (df$depression_included[i] == 1 || df$substance_included[i] == 1 || df$anxiety_included[i] == 1){df$final_included[i] <- 1}
+}
+
+# Exporting the datasets into a CSV file
+write.csv(df, "megameta_dataset.csv", row.names = FALSE)
