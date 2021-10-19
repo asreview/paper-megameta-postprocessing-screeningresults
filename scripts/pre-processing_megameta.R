@@ -29,7 +29,9 @@ RESULTS_DATA_PATH <- "data/asreview_result_"
 OUTPUT_PATH <- "output/"
 
 # Loading Input Data
-mir <- read_xlsx(paste0(DATA_PATH, "mismatch_included_raw.xlsx"))
+
+# For the mismatch included raw, the last 3 columns are redundant.
+mir <- read_xlsx(paste0(DATA_PATH, "mismatch_included_raw.xlsx")) %>% select(1:last_col(3)) 
 depression <- read_xlsx(paste0(RESULTS_DATA_PATH, "depression.xlsx"))
 substance <- read_xlsx(paste0(RESULTS_DATA_PATH, "substance-abuse.xlsx"))
 anxiety <- read_xlsx(paste0(RESULTS_DATA_PATH, "anxiety.xlsx"))
@@ -38,41 +40,59 @@ anxiety <- read_xlsx(paste0(RESULTS_DATA_PATH, "anxiety.xlsx"))
 ###################################
 ## Preparing mismatch inclusions ##
 ###################################
+
 # Create new colnames !
 
+## First let's replace the NA's in the first row with the respective subject
+mir[1, ] <- replace_na(mir[1, ], list(...2 = "Affective_Disorder", ...5 = "Addictive_Disorders", ...8 = "Anxiety"))
 
-# Creating all combinations of functional columns and subjects.
-possible_colnames <- expand.grid("function" = c("title", "DOI", "source"),
-                                 "subject" = c("Intended_Depression", "Intended_Substance_abuse", "Intended_Anxiety"))
+## The colnames should be a combination of the first 2 rows:
+colnames_mir <- paste(mir[1,], mir[2,], sep = "_")
+colnames_mir
 
-colnames_mir <- unite(possible_colnames, colnames, c("subject", "function"))
+## Lastly, clean the names:
+colnames_mir <- str_to_lower(colnames_mir)
+colnames_mir <- str_replace(colnames_mir, " ", "_")
 
-mir <- colnames()
+## Update the colnames and remove the first two rows
+colnames(mir) <- colnames_mir
+mir <- mir[3:nrow(mir),]
 
-# Changing to a long format (NEEDS A MORE ELEGANT SOLUTION!!)
-mismatch_included_title <- mir %>%
-  select(affective_disorder_title, addictive_disorder_title, anxiety_title) %>%
-  pivot_longer(
-    cols = ends_with("title"),
-    names_to = "intended_subject",
-    values_to = "title")
 
-mismatch_included_DOI <- mir %>%
-  select(affective_disorder_DOI, addictive_disorder_DOI, anxiety_DOI) %>%
-  pivot_longer(
-    cols = ends_with("DOI"),
-    names_to = "intended_subject",
-    values_to = "DOI") 
+# Changing the data to long format!
 
+
+# First pivot the title and doi columns
+mismatch_included_no_source <- mir %>% 
+  select(-contains("source")) %>%
+  pivot_longer(cols = ends_with(c("title","doi")),
+    names_to = c("intended_subject", ".value"),
+    names_pattern = "(.+)_(.+)"
+  )
+
+# Then pivot the source separately, because it is different than the rest
 mismatch_included_source <- mir %>%
-  select(affective_disorder_source, addictive_disorder_source, anxiety_source) %>%
+  select(contains("source")) %>%
   pivot_longer(
-    cols = ends_with("source"),
-    names_to = "intended_subject",
+    cols = starts_with("source"),
+    names_to = "possible_sources",
     values_to = "source")
 
-mismatch_included <- mutate(mismatch_included_title, mismatch_included_DOI, mismatch_included_source)
+# Bind the two frames
+mismatch_included <-  cbind(mismatch_included_no_source, source = mismatch_included_source$source)
+## Need to build in an extra check!
 
-# Removing 'DOI:':
+# Remove NA rows (except for when doi is rightfully missing):
+## As you can see here, there are NA rows present
+tail(mismatch_included) 
+
+## remove rows if title is NA
+mismatch_included <- mismatch_included[!is.na(mismatch_included$title), ]
+
+## All cleaned up!
+tail(mismatch_included)
+
+# Removing anything before the actual doi number:
 mismatch_included <- mismatch_included %>%
-  mutate_at("DOI", str_replace, "DOI:", "")
+  mutate_at("doi", str_replace, "^\\D+", "")
+
