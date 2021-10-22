@@ -127,16 +127,38 @@ for(j in 1:length(df$depression_included)){
   }
 }
 
-# Adding intended inclusions (needs work)
-# for(k in 1:3){
-#   for(i in 1:length(mismatch_included$intended_subject)){
-#   for(j in 1:length(df$depression_included)){
-#     if(mismatch_included$intended_subject[i] == k){
-#       if(duplicated(mismatch_included$doi[i], df$doi[j]) == TRUE){df[j,39+k] <- 1}
-#     }
-#   }
-# }
-# }
+# Converting source to factors
+mismatch_included[mismatch_included == "Depr"] <- 1
+mismatch_included[mismatch_included == "Dep"] <- 1
+mismatch_included[mismatch_included == "dep"] <- 1
+mismatch_included[mismatch_included == "Add"] <- 2
+mismatch_included[mismatch_included == "Anx"] <- 3
+mismatch_included[mismatch_included == "ANx"] <- 3
+
+# Adding inclusions in their intended subject, while still keeping the source known.
+mismatch_depr <- filter(mismatch_included, intended_subject == 1)
+for(j in 1:length(mismatch_depr$intended_subject)){  
+  for(i in 1:length(df$depression_included)){
+    if((df$origin_subject[i] == mismatch_depr$source[j]) & (mismatch_depr$doi[j] == df$doi[i]) & (!is.na(df$doi[i])))
+    {df[i,40] <- 1}
+  }
+}
+
+mismatch_sub <- filter(mismatch_included, intended_subject == 2)
+for(j in 1:length(mismatch_sub$intended_subject)){  
+  for(i in 1:length(df$depression_included)){
+    if((df$origin_subject[i] == mismatch_sub$source[j]) & (mismatch_sub$doi[j] == df$doi[i]) & (!is.na(df$doi[i])))
+    {df[i,41] <- 1}
+  }
+}
+
+mismatch_anx <- filter(mismatch_included, intended_subject == 3)
+for(j in 1:length(mismatch_anx$intended_subject)){  
+  for(i in 1:length(df$depression_included)){
+    if((df$origin_subject[i] == mismatch_anx$source[j]) & (mismatch_anx$doi[j] == df$doi[i]) & (!is.na(df$doi[i])))
+    {df[i,42] <- 1}
+  }
+}
 
 # Removing duplicates (needs work)
 
