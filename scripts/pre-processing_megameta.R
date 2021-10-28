@@ -160,8 +160,6 @@ for(j in 1:length(mismatch_anx$intended_subject)){
   }
 }
 
-# Removing duplicates (needs work)
-
 # Adding an index
 df$index <- 1:length(df$depression_included)
 
@@ -170,6 +168,31 @@ df$final_included <- 0
 for(i in 1:length(df$depression_included)){
   if (df$depression_included[i] == 1 || df$substance_included[i] == 1 || df$anxiety_included[i] == 1){df$final_included[i] <- 1}
 }
+
+# Splitting the data into a dataset with and without missing doi's
+df_doi <- df %>%
+  filter(!is.na(doi))
+
+df_non_doi <- df %>%
+  filter(is.na(doi))
+
+# Rearange such that the record with the longest abstract will be the record marked as 'unique'
+df_doi_unq <- df_doi %>%
+  arrange(desc(str_length(abstract)))
+
+# Adding a collumn showing which record is a duplicate
+df_doi_unq$unique_record <- as.character(duplicated(df_doi$doi))
+
+# Converting unique_record to 0 and 1
+df_doi_unq$unique_record[df_doi_unq$unique_record == FALSE] <- 1 #means that the record is unique (either truly unique or the first of a set of duplicates)
+df_doi_unq$unique_record[df_doi_unq$unique_record == TRUE] <- 0 #means that the record is a duplicate
+
+# Binding the dataframes with and without dois back together
+df <- bind_rows(df_non_doi, df_doi_unq)
+
+# Sorting df based on the index
+df <- df %>%
+  arrange(index)
 
 # Exporting the datasets into a CSV file
 write.csv(df, "megameta_dataset.csv", row.names = FALSE)
