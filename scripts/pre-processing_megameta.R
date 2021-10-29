@@ -181,10 +181,10 @@ df_doi_unq <- df_doi %>%
   arrange(desc(str_length(abstract)))
 
 # Adding a collumn showing which record is unique
-df_doi_unq <- df_doi_unq %>% 
-  mutate(unique_record = duplicated(doi)) %>%
-  mutate_if(is.logical, as.character) %>%
-  mutate(unique_record = case_when(unique_record == "FALSE" ~ 1, TRUE ~ 0))
+df_doi_unq <- df_doi_unq %>% mutate(
+  unique_record = duplicated(doi),
+  unique_record = case_when(unique_record == FALSE ~ 1, TRUE ~ 0)
+)
 
 # Binding the dataframes with and without dois back together
 df <- bind_rows(df_non_doi, df_doi_unq)
