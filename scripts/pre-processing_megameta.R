@@ -180,12 +180,11 @@ df_non_doi <- df %>%
 df_doi_unq <- df_doi %>%
   arrange(desc(str_length(abstract)))
 
-# Adding a collumn showing which record is a duplicate
-df_doi_unq$unique_record <- as.character(duplicated(df_doi_unq$doi))
-
-# Converting unique_record to 0 and 1
-df_doi_unq$unique_record[df_doi_unq$unique_record == FALSE] <- 1 #means that the record is unique (either truly unique or the first of a set of duplicates)
-df_doi_unq$unique_record[df_doi_unq$unique_record == TRUE] <- 0 #means that the record is a duplicate
+# Adding a collumn showing which record is unique
+df_doi_unq <- df_doi_unq %>% 
+  mutate(unique_record = duplicated(doi)) %>%
+  mutate_if(is.logical, as.character) %>%
+  mutate(unique_record = case_when(unique_record == "FALSE" ~ 1, TRUE ~ 0))
 
 # Binding the dataframes with and without dois back together
 df <- bind_rows(df_non_doi, df_doi_unq)
