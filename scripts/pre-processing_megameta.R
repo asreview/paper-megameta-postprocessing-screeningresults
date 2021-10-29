@@ -181,7 +181,7 @@ df_doi_unq <- df_doi %>%
   arrange(desc(str_length(abstract)))
 
 # Adding a collumn showing which record is a duplicate
-df_doi_unq$unique_record <- as.character(duplicated(df_doi$doi))
+df_doi_unq$unique_record <- as.character(duplicated(df_doi_unq$doi))
 
 # Converting unique_record to 0 and 1
 df_doi_unq$unique_record[df_doi_unq$unique_record == FALSE] <- 1 #means that the record is unique (either truly unique or the first of a set of duplicates)
