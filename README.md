@@ -9,3 +9,6 @@ An output folder is automatically created.
 ### Postprocessing
 `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
 `final_included.R` - This script contains a function to create a column with the final inclusions.
+`identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
+
+
