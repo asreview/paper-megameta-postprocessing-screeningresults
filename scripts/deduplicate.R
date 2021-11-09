@@ -1,5 +1,7 @@
 deduplicate <- function(df){
+  
   # Remove irrelevant duplicates
+  # Irrelevant duplicates are those where there is no final_inclusion
   df <- filter(df, final_included == 1 | unique_record == 1 | is.na(unique_record))
   
   # Create a subset of the duplicates
@@ -14,6 +16,9 @@ deduplicate <- function(df){
   # Merge duplicate rows
   for(i in 1:max(doi_set$dup_id)){
     
+    # Add a counter:
+    print(paste("deduplicating set", i, "out of", max(doi_set$dup_id)))
+    
     # select a pair of duplicates
     dup_set <- doi_set[which(doi_set$dup_id == i),] 
     
@@ -23,35 +28,41 @@ deduplicate <- function(df){
     keep_index <- dup_set$index[needed_row] # finds the index of this row to keep
     remove_index <- dup_set$index[-needed_row] 
     
-    # MERGING CODE HERE
+    ## MERGING CODE ##
     
-    # REPLACE THE ROW IN DF WITH THE MERGED ONE
-    df[which(df$index == keep_index),] # <-  replace with merged row
+    # Simple solution to merge the information across the duplicated rows is 
+    # to sum the results:
+    # The columns to be merged are
+    cols_merge <- c("doi", "depression_included", "substance_included", "anxiety_included", "final_included")
+    # "doi" is added as a grouping variable
     
-    # REMOVE DUPLICATE ROW
-    df <- df[-which(df$index == remove_index),]
+    # First find the columns which should be merged,
+    # This should not be a column in which there are no values!
+    # In other words, only the columns which have at least 1 value should be
+    # included. (If not, the sum function will just put a 0, meaning that information
+    # will be lost about which records were seen in what databases)
+    cols_merge_final <- colnames(dup_set %>% 
+                                   select(all_of(cols_merge)) %>%
+                                   select(where(function(x) sum(is.na(x)) < nrow(dup_set))) %>%
+                                   ungroup() %>%
+                                   select(!doi)
+                                 )
+    
+    # Obtain the merged values
+    dedup_values <- dup_set %>%
+      select(all_of(cols_merge_final), doi) %>%
+      summarise(across(cols_merge_final, sum, na.rm = T)) %>%
+      mutate(final_included = case_when(final_included > 1 ~ 1, TRUE ~ final_included)) %>%
+      # With the line above, final_included is max. 1     
+      select(!doi)
+    
+    
+    # REPLACE THE CORRECT COLUMNS IN DF WITH THE MERGED VALUES
+    df[which(df$index == keep_index), cols_merge_final] <- dedup_values
+    
+    # REMOVE DUPLICATE ROW(S)
+    df <- df[-which(df$index %in% remove_index),]
   }
 
   return(df)
 }
-
-## MERGING CODE WORK IN PROGRESS!!
-
-# Define merging rules:
-# A 1 in any of the columns should overwrite an NA or 0.
-# A 0 should overwrite an NA
-# Both NA? Should stay NA? <- This is the question that remains.. 
-
-# Simple solution for the three subjects is to sum the results:
-# The columns to be merged are
-cols_merge <- c("depression_included", "substance_included", "anxiety_included", "final_included")
-
-############################################################
-# The problem is that NA's become 0, but does that matter? #
-############################################################
-
-dup_set %>% 
-  summarise(across(cols_merge, sum, na.rm = T)) %>%
-  mutate(final_included = case_when(final_included > 1 ~ 1, TRUE ~ final_included))
-  # With the last row, final_included is max. 1     
-
