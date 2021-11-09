@@ -1,8 +1,8 @@
 deduplicate <- function(df){
   
   # Remove irrelevant duplicates
-  # Irrelevant duplicates are those where there is no final_inclusion
-  df <- filter(df, final_included == 1 | unique_record == 1 | is.na(unique_record))
+  # Irrelevant duplicates are those where there is no composite_label
+  df <- filter(df, composite_label == 1 | unique_record == 1 | is.na(unique_record))
   
   # Create a subset of the duplicates
   df_doi <- filter(df, !is.na(doi))
@@ -15,7 +15,7 @@ deduplicate <- function(df){
 
   # Merge duplicate rows
   for(i in 1:max(doi_set$dup_id)){
-    
+     
     # Add a counter:
     print(paste("deduplicating set", i, "out of", max(doi_set$dup_id)))
     
@@ -33,7 +33,7 @@ deduplicate <- function(df){
     # Simple solution to merge the information across the duplicated rows is 
     # to sum the results:
     # The columns to be merged are
-    cols_merge <- c("doi", "depression_included", "substance_included", "anxiety_included", "final_included")
+    cols_merge <- c("doi", "depression_included", "substance_included", "anxiety_included", "composite_label")
     # "doi" is added as a grouping variable
     
     # First find the columns which should be merged,
@@ -52,8 +52,8 @@ deduplicate <- function(df){
     dedup_values <- dup_set %>%
       select(all_of(cols_merge_final), doi) %>%
       summarise(across(cols_merge_final, sum, na.rm = T)) %>%
-      mutate(final_included = case_when(final_included > 1 ~ 1, TRUE ~ final_included)) %>%
-      # With the line above, final_included is max. 1     
+      mutate(composite_label = case_when(composite_label > 1 ~ 1, TRUE ~ composite_label)) %>%
+      # With the line above, composite_label is max. 1     
       select(!doi)
     
     

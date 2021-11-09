@@ -4,7 +4,7 @@
 
 ################################################################################
 # This script creates from the input files (see below) the following output:   #
-# - final_inclusions_megameta                                                  #
+# - megemeta_merged_after_screening_asreview                                                  #
 ################################################################################
 
 # install.packages
@@ -22,7 +22,7 @@ library(janitor)   # Deduplication
 
 # Loading functions
 source("scripts/merge_datasets.R") # Merges all three input datasets
-source("scripts/final_included.R") # Adds a column indicating final_inclusions
+source("scripts/composite_label.R") # Adds a column indicating final_inclusions
 source("scripts/identify_duplicates.R") # Identifies duplicates
 source("scripts/deduplicate.R") # Merging and deduplicating rows
 
@@ -32,13 +32,13 @@ dir.create("output")
 
 # Defining Paths
 DATA_PATH <- "data/"
-RESULTS_DATA_PATH <- "data/asreview_result_"
+RESULTS_DATA_PATH <- "-screening-CNN-output.xlsx"
 OUTPUT_PATH <- "output/"
 
 # Loading Input Data
-depression <- read_xlsx(paste0(RESULTS_DATA_PATH, "depression.xlsx"))
-substance <- read_xlsx(paste0(RESULTS_DATA_PATH, "substance-abuse.xlsx"))
-anxiety <- read_xlsx(paste0(RESULTS_DATA_PATH, "anxiety.xlsx"))
+depression <- read_xlsx(paste0(DATA_PATH, "depression", RESULTS_DATA_PATH))
+substance <- read_xlsx(paste0(DATA_PATH, "substance", RESULTS_DATA_PATH))
+anxiety <- read_xlsx(paste0(DATA_PATH, "anxiety", RESULTS_DATA_PATH))
 
 ##### Data wrangling ######
 
@@ -47,9 +47,9 @@ anxiety <- read_xlsx(paste0(RESULTS_DATA_PATH, "anxiety.xlsx"))
 df <- merge_datasets(depression, substance, anxiety)
 
 # FINAL INCLUSIONS
-## Next, let's add a column of final_included
-## final_included simply indicates whether the record was included.
-df <- final_included(df)
+## Next, let's add a column of composite_label.
+## Composite_label simply indicates whether the record was included.
+df <- composite_label(df)
 
 # IDENTIFY DUPLICATES
 ## Then the duplicates need to be identified and deduplicated
@@ -86,12 +86,12 @@ df <-
       depression_included,
       anxiety_included,
       substance_included,
-      final_included
+      composite_label
     ),
     .after = last_col()
   )
 
 
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "final_inclusions_megameta.xlsx"))
+write_xlsx(df, path = paste0(OUTPUT_PATH, "megemeta_merged_after_screening_asreview"))
 
