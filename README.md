@@ -33,39 +33,39 @@ As mentioned above, the result of the `master_script_merging_after_asreview.R` i
 `output/megemeta_merged_after_screening_asreview.xslx`. In this dataset the following
 columns have been added.
 
-For all columns where there are only 0's 1's and NA's, a 0 indicates a negative
-(excluded for example), while 1 indicates a positive (included for example). NA
+For all columns where there are only 0's 1's and NA's, a `0` indicates a negative
+(excluded for example), while `1` indicates a positive (included for example). `NA`
 means `Not Available`. 
 
 - `index` (1-165045):
   A simple indexing column going from 1-165045. Some numbers are not present
   because they have been removed after deduplication.
-- unique_record (0, 1, NA):
+- `unique_record` (0, 1, NA):
   Indicating whether the column has a unique DOI. This is NA when there is no
   DOI present.
-- depression_included (0, 1, NA):
+- `depression_included` (0, 1, NA):
   A column indicating whether a record was included in depression.
-- anxiety_included (0, 1, NA):
+- `anxiety_included` (0, 1, NA):
   A column indicating whether a record was included in anxiety.
-- substance_included (0, 1, NA):
+- `substance_included` (0, 1, NA):
   A column indicating whether a record was included in substance_abuse.
-- composite_label (0, 1, NA):
+- `composite_label` (0, 1, NA):
   A column indicating whether a record was included in at least one of the
   subjects.
-- quality_check_1(0->1) (1, 2, 3, NA):
+- `quality_check_1(0->1)` (1, 2, 3, NA):
   This column indicates for which subjects a record was falsely excluded:
   - 1 = anxiety
   - 2 = depression
   - 3 = substance-abuse
-- quality_check_2(1->0) (1, 2, 3, NA):
+- `quality_check_2(1->0)` (1, 2, 3, NA):
   This column indicates for which subjects a record was falsely included:
   - 1 = anxiety
   - 2 = depression
   - 3 = substance-abuse
-- depression_included_corrected (0, 1, NA):
+- `depression_included_corrected` (0, 1, NA):
   Combining the information from the ..._included and quality_check columns,
   this column contains the inclusion/exclusion/not seen labels after correction.
-- data_extracted (NA):
+- `data_extracted` (NA):
   An empty column to be filled manually about which records have been extracted.
 
 
