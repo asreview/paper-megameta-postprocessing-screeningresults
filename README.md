@@ -28,16 +28,16 @@ To get started:
 `deduplicate.R` - This script contaions a function to deduplicate the records while maintaining all information.
 
 
-## RESULTS
+## Results
 As mentioned above, the result of the `master_script_merging_after_asreview.R` is
 `output/megemeta_merged_after_screening_asreview.xslx`. In this dataset the following
 columns have been added.
 
 For all columns where there are only 0's 1's and NA's, a 0 indicates a negative
 (excluded for example), while 1 indicates a positive (included for example). NA
-means Not Available. 
+means `Not Available`. 
 
-- index (1-165045):
+- `index` (1-165045):
   A simple indexing column going from 1-165045. Some numbers are not present
   because they have been removed after deduplication.
 - unique_record (0, 1, NA):
