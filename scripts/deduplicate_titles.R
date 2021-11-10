@@ -1,0 +1,102 @@
+## Deduplication title ##
+
+# Only used for the quality check part!
+
+# Unfortunately, doi matching can not be used, because there are also many
+# missing doi's present in both the quality check datasets as well as the 
+# merged dataset. Hence, the following matching is based on title.
+
+# Because deduplication only took place on matching dois, we may now
+# still encounter duplicates, but on the title level.
+# So before the correction function can be used, let's start with a deduplication
+# function. This function only uses the elements from the deduplicate.R 
+# script.
+
+deduplicate_titles <- function(df, error_set){
+  
+  # Only want to apply deduplication to those titles present in the
+  # quality check datasets.
+  df_partly <- df[which(df$title %in% error_set$title), ] 
+  
+  # find the duplicated titles
+  df_dup <- get_dupes(df_partly, title)
+  
+  # Add an indicator for each set of duplicates
+  title_set <- df_dup %>% 
+    group_by(title) %>%
+    mutate(dup_id = cur_group_id())
+  
+  # Merge duplicate rows
+  for(i in 1:max(title_set$dup_id)){
+    
+    # select a pair of duplicates
+    dup_set <- title_set[which(title_set$dup_id == i),] 
+    
+    # determine the row of the set to which all information
+    # of the duplicates will be saved (the one with the longest abstract)
+    dup_set <- dup_set %>%
+      arrange(desc(composite_label))
+    # Index of the row to keep
+    keep_index <- dup_set$index[1] # takes the top row.
+    # Index of the row to remove
+    remove_index <- dup_set$index[-needed_row] 
+    
+    # Columns to merge in general
+    cols_merge <-
+      c(
+        "title",
+        "depression_included",
+        "substance_included",
+        "anxiety_included",
+        "composite_label"
+      )
+    
+    # Which columns to merge specifically for this set
+    cols_merge_final <- colnames(dup_set %>%
+                                   select(all_of(cols_merge)) %>%
+                                   select(where(function(x)
+                                     sum(is.na(
+                                       x
+                                     )) < nrow(dup_set))) %>%
+                                   ungroup() %>%
+                                   select(!title)
+    ) # close cols_merge_final
+    
+    # Obtain the merged value(s)
+    dup_set[which(dup_set$index == keep_index), cols_merge_final] <-
+      dup_set %>%
+      select(all_of(cols_merge_final), title) %>%
+      summarise(across(cols_merge_final, sum, na.rm = T)) %>%
+      select(!title)
+    
+    # Precaution for composite label: 
+    # It should not exceed 1
+    # Should be NA when all cols are NA
+    dup_set[which(dup_set$index == keep_index), cols_merge] <-
+      dup_set[which(dup_set$index == keep_index),] %>%
+      select(cols_merge) %>%
+      mutate(
+        composite_label = case_when(
+          composite_label > 1 ~ 1,
+          is.na(depression_included) &
+            is.na(substance_included) & is.na(anxiety_included)
+          ~ NA_real_,
+          TRUE ~ composite_label
+        )
+      ) 
+    
+    # Select only the columns which have changed values
+    dedup_values <- dup_set[which(dup_set$index == keep_index), cols_merge_final]
+    
+    
+    # REPLACE THE CORRECT COLUMNS IN DF WITH THE MERGED VALUES
+    df[which(df$index == keep_index), cols_merge_final] <- dedup_values
+    
+    # REMOVE DUPLICATE ROW(S)
+    df <- df[-which(df$index %in% remove_index),]
+    
+  } # close for loop
+  
+  return(df)
+  
+} # close deduplication function
