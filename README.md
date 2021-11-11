@@ -1,5 +1,25 @@
 # Scripts for Post-Processing Mega-Meta Results
 
+The repository is part of the so-called, Mega-Meta study on reviewing factors
+contributing to substance use, anxiety, and depressive disorders. The study
+protocol has been pre-registered at
+[Prospero](https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42021266297).
+The procedure for obtaining the search terms, the exact search query, and
+selecting key papers by expert consensus can be found on the [Open Science
+Framework](https://osf.io/m5uhy/). The three datasets, one for each disorder,
+used for screening in ASReview and the partly labeled output datasets can be
+found on DANS[NEEDS LINK].  The current repository contains the
+post-processing scripts to: 
+
+1.	Merge the three output files after screening in
+ASReview; 
+2.	Deal with noisy labels corrected in two rounds of quality checks;
+3.	Obtain missing DOIs and titles; 4.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started). 
+
+The scripts in the current repository result in one single dataset that can be
+used for future meta-analyses. The dataset itself is available on DANS[NEEDS
+LINK].  
+
 Within the folder scripts, one can find the following scripts.
 
 ## master_script_merging_after_asreview.R
