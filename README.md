@@ -20,9 +20,27 @@ The scripts in the current repository result in one single dataset that can be
 used for future meta-analyses. The dataset itself is available on DANS[NEEDS
 LINK].  
 
-Within the folder scripts, one can find the following scripts.
+## Datasets
+Add the required data into the data folder available on DANS[NEEDS LINK].
 
-## master_script_merging_after_asreview.R
+1. The three export-datasets with the partly labelled data after screening in
+ASReview:  
+  - `anxiety-screening-CNN-output.xlsx`
+  - `depression-screening-CNN-output.xslx`
+  - `substance-screening-CNN-output.xslx`
+
+2. The three datasets resulting from Quality Check 1:
+ - `anxiety-incorrectly-excluded-records.xlsx`
+ - `depression-incorrectly-excluded-records.xlsx`
+ - `substance-incorrectly-excluded-records.xlsx`
+
+3. The three datasets resulting from Quality Check 2:
+ - `anxiety-incorrectly-included-records`
+ - `depression-incorrectly-included-records`
+ - `substance-incorrectly-included-records`
+
+
+
 The script `master_script_merging_after_asreview.R` is the master-script
 within this repository. With the script the post-processing scripts
 mentioned below are called for and used to create a merged dataset:
@@ -32,10 +50,7 @@ substance abuse are imported, merged and deduplicated. The result is saved as a
 datafile which is placed in `output/megemeta_merged_after_screening_asreview.xslx`
 
 To get started:
-1. Add the required data into the data folder:
-  - anxiety-screening-CNN-output.xlsx
-  - depression-screening-CNN-output.xslx
-  - substance-screening-CNN-output.xslx
+1. 
 2. Open the pre-processing.Rproject
 3. Open scripts/master_script_merging_after_asreview.R
 4. Install if necessary the packages required by uncommenting the lines
