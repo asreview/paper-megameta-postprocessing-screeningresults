@@ -25,8 +25,8 @@ source("scripts/merge_datasets.R") # Merges all three input datasets
 source("scripts/composite_label.R") # Adds a column indicating final_inclusions
 source("scripts/identify_duplicates.R") # Identifies duplicates
 source("scripts/deduplicate.R") # Merging and deduplicating rows
-# source("scripts/deduplicate_titles.R") # Deduplication and merging based on titles
-# source("scripts/quality_check.R") # Adding columns with corrected values.
+source("scripts/deduplicate_titles.R") # Deduplication and merging based on titles
+source("scripts/quality_check.R") # Adding columns with corrected values.
 
 # Creating Directories
 ## Output
@@ -98,10 +98,33 @@ sum(df$anxiety_included, na.rm = T)
 sum(df$composite_label, na.rm = T)
 
 # QUALITY CHECKS
+# This function adds multiple columns:
+# 1. "quality_check_1(0->1)": 
+#    Indicating for which subject a record was wrongly excluded:
+#    1 = Anxiety
+#    2 = Depression
+#    3 = Substance Abuse
 
+# 2. "quality_check_2(1->0)":      
+#    Indicating for which subject a record was wrongly included:
+#    1 = Anxiety
+#    2 = Depression
+#    3 = Substance Abuse
 
+# 3. "anxiety_included_corrected":
+#    The corrected label, taking the previous columns into account. 
 
+# 4. "depression_included_corrected"
+#    The corrected label, taking the previous columns into account. 
 
+# 5. "substance_included_corrected"  
+#    The corrected label, taking the previous columns into account. 
+
+# 6. "composite_label_corrected" 
+#    The corrected composite label, based on the subject_included_corrected
+#    columns.
+
+df <- quality_check(df)
 
 
 #### Preparation for exportation ####
@@ -121,7 +144,13 @@ df <-
       depression_included,
       anxiety_included,
       substance_included,
-      composite_label
+      composite_label,
+      `quality_check_1(0->1)`,
+      `quality_check_2(1->0)`,
+      anxiety_included_corrected,
+      depression_included_corrected,
+      substance_included_corrected,
+      composite_label_corrected
     ),
     .after = last_col()
   )
@@ -140,6 +169,11 @@ df <- df %>%
       asreview_ranking
     )
   )
+
+#TO DO: create daa_extracted function
+# However below the column is already created as a mockup:
+
+df <- df %>% mutate(data_extracted = NA)
 
 # EXPORT
 write_xlsx(df, path = paste0(OUTPUT_PATH, "megemeta_merged_after_screening_asreview_preliminary.xlsx"))

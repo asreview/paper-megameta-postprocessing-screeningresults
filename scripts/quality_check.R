@@ -22,7 +22,7 @@
 # merged dataset. Hence, the following matching is based on title.
 
 quality_check <- function(df){
-  
+
   ## Quality check 1 ##
   # Excluded records that should have been included. 
 
@@ -46,7 +46,6 @@ quality_check <- function(df){
   # 2 = depression
   # 3 = substance-abuse
   # NA = No change needed
-  # Add columns with the corrected labels.
   
   df <-
     df %>% mutate(
@@ -55,14 +54,8 @@ quality_check <- function(df){
         df$index %in% depr_error_1$index ~ 2,
         df$index %in% sub_error_1$index  ~ 3,
         TRUE ~ NA_real_
-      ),
-      anxiety_included_corrected = case_when(`quality_check_1(0->1)` == 1 ~ 1,
-                                             TRUE ~ anxiety_included),
-      depression_included_corrected = case_when(`quality_check_1(0->1)` == 2 ~ 1,
-                                                TRUE ~ depression_included),
-      substance_included_corrected = case_when(`quality_check_1(0->1)` == 3 ~ 1,
-                                               TRUE ~ substance_included)
-    )
+      )
+      )
   
   
   ## Quality check 2 ##
@@ -75,18 +68,13 @@ quality_check <- function(df){
   df <- deduplicate_titles(df, substance_q2)
   df <- deduplicate_titles(df, depression_q2)
   
-    # Step 2:
+  # Step 2:
   # Find the rows in the merged dataframe that should be adapted, without
-  # duplicates, matched on title
+  # duplicates.
   
   anx_error_2  <- df[which(df$title %in% anxiety_q2$title), ] 
   depr_error_2 <- df[which(df$title %in% depression_q2$title), ]
   sub_error_2  <- df[which(df$title %in% substance_q2$title), ]
-  
-  # THE PROBLEM HERE IS WITH DEPRESSION, SOME TITLES ARE NA, HENCE A TOO LARGE
-  # SET IS RETURNED! THEREFORE, THOSE RECORDS IN DEPRESSION_Q2 WITHOUT A TITLE
-  # SHOULD BE MATCHED ON RECORD_ID OR SOMETHING. 
-  
   
   # Step 3:
   # Add a column to df called `quality_check_2(1->0)`, where:
@@ -98,10 +86,37 @@ quality_check <- function(df){
   df <- df %>% mutate(`quality_check_2(1->0)` = case_when(df$index %in% anx_error_2$index  ~ 1,
                                                           df$index %in% depr_error_2$index ~ 2,
                                                           df$index %in% sub_error_2$index  ~ 3,
-                                                          TRUE ~ NA_real_),
-                      
-                      )
+                                                          TRUE ~ NA_real_))
+  ## Final set ##
+  # Create the corrected label based on quality check 1 and quality check 2.
+  # If a record is deemed incorrectly labeled for a specific subject, then it
+  # will be corrected, otherwise the old label will be used.
   
+  df <-
+    df %>% mutate(
+      anxiety_included_corrected = case_when(`quality_check_1(0->1)` == 1 ~ 1,
+                                             `quality_check_2(1->0)` == 1 ~ 0,
+                                             TRUE ~ anxiety_included),
+      depression_included_corrected = case_when(`quality_check_1(0->1)` == 2 ~ 1,
+                                                `quality_check_2(1->0)` == 2 ~ 0,
+                                                TRUE ~ depression_included),
+      substance_included_corrected = case_when(`quality_check_1(0->1)` == 3 ~ 1,
+                                               `quality_check_2(1->0)` == 3 ~ 0,
+                                               TRUE ~ substance_included))
+  
+  
+  
+    df <- df %>% mutate(composite_label_corrected = case_when(
+        df$depression_included_corrected == 1 & !is.na(df$depression_included_corrected) ~ 1,
+        df$substance_included_corrected == 1 & !is.na(df$substance_included_corrected) ~ 1 ,
+        df$anxiety_included_corrected == 1 & !is.na(df$anxiety_included_corrected) ~ 1,
+        df$depression_included_corrected == 0 & !is.na(df$depression_included_corrected) ~ 0,
+        df$substance_included_corrected == 0 & !is.na(df$substance_included_corrected) ~ 0,
+        df$anxiety_included_corrected == 0 & !is.na(df$anxiety_included_corrected) ~ 0,
+        TRUE ~ NA_real_
+      ))
+  
+
   
   return(df)
   

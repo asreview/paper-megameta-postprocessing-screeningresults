@@ -13,7 +13,7 @@
 # script.
 
 deduplicate_titles <- function(df, error_set){
-  
+
   # First make sure that there are no empty titles
   ## If there are, they should be replaced with NA
   error_set$title <- ifelse(str_length(error_set$title) < 2, NA, error_set$title) 
@@ -24,6 +24,9 @@ deduplicate_titles <- function(df, error_set){
   # quality check dataset.
   df_partly <- df[which(df$title %in% error_set_titles$title), ] 
   
+  ## Check if there are any duplicates:
+  if (any(duplicated(df_partly$title))){
+ 
   # find the duplicated titles
   df_dup <- get_dupes(df_partly, title)
   
@@ -104,5 +107,14 @@ deduplicate_titles <- function(df, error_set){
   } # close for loop
   
   return(df)
+  
+  } else {
+    
+    return(df)
+    
+  }
+  
+  
+  
   
 } # close deduplication function
