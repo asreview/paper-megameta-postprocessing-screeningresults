@@ -48,9 +48,6 @@ To get started:
 3. Install, if necessary, the packages required by uncommenting the lines;
 4. Run the script.
 
-The result is saved as a datafile which is placed in
-`output/megemeta_merged_after_screening_asreview.xslx`
-
 ### Post-processing functions
 `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
 `composite_label.R` - This script contains a function to create a column with the final inclusions.
@@ -59,13 +56,9 @@ The result is saved as a datafile which is placed in
 
 
 ## Results
-As mentioned above, the result of the `master_script_merging_after_asreview.R` is
+The result of the `master_script_merging_after_asreview.R` is
 `output/megemeta_merged_after_screening_asreview.xslx`. In this dataset the following
-columns have been added.
-
-For all columns where there are only 0's 1's and NA's, a `0` indicates a negative
-(excluded for example), while `1` indicates a positive (included for example). `NA`
-means `Not Available`. 
+columns have been added:
 
 - `index` (1-165045):
   A simple indexing column going from 1-165045. Some numbers are not present
@@ -95,10 +88,10 @@ means `Not Available`.
 - `depression_included_corrected` (0, 1, NA):
   Combining the information from the ..._included and quality_check columns,
   this column contains the inclusion/exclusion/not seen labels after correction.
-- `data_extracted` (NA):
+- `data_extracted` (0, 1, NA):
   An empty column to be filled manually about which records have been extracted.
 
+For all columns where there are only 0's 1's and NA's, a `0` indicates a negative
+(excluded for example), while `1` indicates a positive (included for example). `NA`
+means `Not Available`. 
 
-## script pre-processing_megameta.R
-To use the script, you first need to add the respective data to the data folder.
-An output folder is automatically created.
