@@ -40,21 +40,16 @@ ASReview:
  - `substance-incorrectly-included-records`
 
 
-
-The script `master_script_merging_after_asreview.R` is the master-script
-within this repository. With the script the post-processing scripts
-mentioned below are called for and used to create a merged dataset:
-
-The three datasets on the subjects depression, anxiety, and
-substance abuse are imported, merged and deduplicated. The result is saved as a
-datafile which is placed in `output/megemeta_merged_after_screening_asreview.xslx`
+## Installation
 
 To get started:
-1. 
-2. Open the pre-processing.Rproject
-3. Open scripts/master_script_merging_after_asreview.R
-4. Install if necessary the packages required by uncommenting the lines
-5. Run the script
+1. Open the `pre-processing.Rproject` in Rstudio;
+2. Open `scripts/master_script_merging_after_asreview.R`;
+3. Install, if necessary, the packages required by uncommenting the lines;
+4. Run the script.
+
+The result is saved as a datafile which is placed in
+`output/megemeta_merged_after_screening_asreview.xslx`
 
 ### Post-processing functions
 `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
