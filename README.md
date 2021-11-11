@@ -1,4 +1,4 @@
-# paper-mega-meta-preprocessing
+# Scripts for Post-Processing Mega-Meta Results
 
 Within the folder scripts, one can find the following scripts.
 
