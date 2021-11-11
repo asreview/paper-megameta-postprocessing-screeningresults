@@ -95,3 +95,12 @@ For all columns where there are only 0's 1's and NA's, a `0` indicates a negativ
 (excluded for example), while `1` indicates a positive (included for example). `NA`
 means `Not Available`. 
 
+
+## Funding 
+This project is funded by a grant from the Centre for Urban Mental Health, University of Amsterdam, The Netherlands
+
+## Licence
+The content in this repository is published under the MIT license.
+
+## Contact
+For any questions or remarks, please send an email to [ADD EMAIL].
