@@ -46,48 +46,61 @@ quality_check <- function(df){
   # 2 = depression
   # 3 = substance-abuse
   # NA = No change needed
+  # Add columns with the corrected labels.
   
-  df <- df %>% mutate(`quality_check_1(0->1)` = case_when(df$index %in% anx_error_1$index  ~ 1,
-                                                          df$index %in% depr_error_1$index ~ 2,
-                                                          df$index %in% sub_error_1$index  ~ 3,
-                                                          TRUE ~ NA_real_))
+  df <-
+    df %>% mutate(
+      `quality_check_1(0->1)` = case_when(
+        df$index %in% anx_error_1$index  ~ 1,
+        df$index %in% depr_error_1$index ~ 2,
+        df$index %in% sub_error_1$index  ~ 3,
+        TRUE ~ NA_real_
+      ),
+      anxiety_included_corrected = case_when(`quality_check_1(0->1)` == 1 ~ 1,
+                                             TRUE ~ anxiety_included),
+      depression_included_corrected = case_when(`quality_check_1(0->1)` == 2 ~ 1,
+                                                TRUE ~ depression_included),
+      substance_included_corrected = case_when(`quality_check_1(0->1)` == 3 ~ 1,
+                                               TRUE ~ substance_included)
+    )
+  
   
   ## Quality check 2 ##
   # Included records that should have been excluded 
   
-  # Step 1:
-  # Which rows in the merged dataframe should be changed, matched on title.
-  # They may still contain duplicated rows, because duplicated titles were not 
-  # merged. 
-  anx_error_2_dupes <- df[which(df$title %in% anxiety_q1$title), ] 
-  depr_error_2_dupes  <- df[which(df$title %in% depression_q1$title), ]
-  sub_error_2_dupes  <- df[which(df$title %in% substance_q1$title), ]
-  
-  # Step 2:
+  # Step 1 deduplication for those where the doi is present:
   # Deduplicate the merged dataset based on titles only for those records that
   # should be altered according to the quality check datasets. 
-  df <- deduplicate_titles(df, anx_error_1_dupes)
-  df <- deduplicate_titles(df, depr_error_1_dupes)
-  df <- deduplicate_titles(df, sub_error_1_dupes)
+  df <- deduplicate_titles(df, anxiety_q2)
+  df <- deduplicate_titles(df, substance_q2)
+  df <- deduplicate_titles(df, depression_q2)
+  
+    # Step 2:
+  # Find the rows in the merged dataframe that should be adapted, without
+  # duplicates, matched on title
+  
+  anx_error_2  <- df[which(df$title %in% anxiety_q2$title), ] 
+  depr_error_2 <- df[which(df$title %in% depression_q2$title), ]
+  sub_error_2  <- df[which(df$title %in% substance_q2$title), ]
+  
+  # THE PROBLEM HERE IS WITH DEPRESSION, SOME TITLES ARE NA, HENCE A TOO LARGE
+  # SET IS RETURNED! THEREFORE, THOSE RECORDS IN DEPRESSION_Q2 WITHOUT A TITLE
+  # SHOULD BE MATCHED ON RECORD_ID OR SOMETHING. 
+  
   
   # Step 3:
-  # Again find the rows in the merged dataframe that should be adapted, without
-  # duplicates this time.
-  anx_error_1  <- df[which(df$title %in% anxiety_q1$title), ] 
-  depr_error_1 <- df[which(df$title %in% depression_q1$title), ]
-  sub_error_1  <- df[which(df$title %in% substance_q1$title), ]
-  
-  # Step 4:
-  # Add a column to df called `quality_check_1(0->1)`, where:
+  # Add a column to df called `quality_check_2(1->0)`, where:
   # 1 = anxiety
   # 2 = depression
   # 3 = substance-abuse
   # NA = No change needed
   
-  df <- df %>% mutate(`quality_check_1(0->1)` = case_when(df$index %in% anx_error_1$index  ~ 1,
-                                                          df$index %in% depr_error_1$index ~ 2,
-                                                          df$index %in% sub_error_1$index  ~ 3,
-                                                          TRUE ~ NA_real_))
+  df <- df %>% mutate(`quality_check_2(1->0)` = case_when(df$index %in% anx_error_2$index  ~ 1,
+                                                          df$index %in% depr_error_2$index ~ 2,
+                                                          df$index %in% sub_error_2$index  ~ 3,
+                                                          TRUE ~ NA_real_),
+                      
+                      )
   
   
   return(df)

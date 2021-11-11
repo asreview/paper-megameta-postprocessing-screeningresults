@@ -14,9 +14,15 @@
 
 deduplicate_titles <- function(df, error_set){
   
-  # Only want to apply deduplication to those titles present in the
-  # quality check datasets.
-  df_partly <- df[which(df$title %in% error_set$title), ] 
+  # First make sure that there are no empty titles
+  ## If there are, they should be replaced with NA
+  error_set$title <- ifelse(str_length(error_set$title) < 2, NA, error_set$title) 
+  ## Retrieve those rows where a title is present:
+  error_set_titles <- error_set[which(!is.na(error_set$title)), ]
+  
+  # Only apply deduplication to those titles present in the
+  # quality check dataset.
+  df_partly <- df[which(df$title %in% error_set_titles$title), ] 
   
   # find the duplicated titles
   df_dup <- get_dupes(df_partly, title)

@@ -36,7 +36,8 @@ dir.create("output")
 DATA_PATH <- "data/"
 RESULTS_DATA_PATH <- "-screening-CNN-output.xlsx"
 QUALITY_CHECK_1_PATH <- "-incorrectly-excluded-records.xlsx"
-QUALITY_CHECK_2_PATH <- "-incorrectly-included-records.xlsx"
+# TO BE CHANGED WHEN FINAL DATASET IS AVAILABLE:
+QUALITY_CHECK_2_PATH <- "-incorrectly-included-records-preliminary-results.xlsx"
 OUTPUT_PATH <- "output/"
 
 # Importing Results Data
@@ -57,9 +58,9 @@ anxiety_q1 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_1_PATH))
 
 ### MISSING DATAFILES ###
 # # Quality check 2 Data
-# depression_q2 <- read_xlsx(paste0(DATA_PATH, "depression", QUALITY_CHECK_2_PATH))
-# substance_q2 <- read_xlsx(paste0(DATA_PATH, "substance_abuse", QUALITY_CHECK_2_PATH))
-# anxiety_q2 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_2_PATH))
+depression_q2 <- read_xlsx(paste0(DATA_PATH, "depression", QUALITY_CHECK_2_PATH))
+substance_q2 <- read_xlsx(paste0(DATA_PATH, "substance", QUALITY_CHECK_2_PATH))
+anxiety_q2 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_2_PATH))
 
 ##### Data wrangling ######
 
@@ -141,5 +142,5 @@ df <- df %>%
   )
 
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "megemeta_merged_after_screening_asreview"))
+write_xlsx(df, path = paste0(OUTPUT_PATH, "megemeta_merged_after_screening_asreview_preliminary.xlsx"))
 
