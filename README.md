@@ -9,12 +9,12 @@ selecting key papers by expert consensus can be found on the [Open Science
 Framework](https://osf.io/m5uhy/). The three datasets, one for each disorder,
 used for screening in ASReview and the partly labeled output datasets can be
 found on DANS[NEEDS LINK].  The current repository contains the
-post-processing scripts to: 
+post-processing scripts to:
 
 1.	Merge the three output files after screening in
-ASReview; 
+ASReview;
 2.	Deal with noisy labels corrected in two rounds of quality checks;
-3.	Obtain missing DOIs and titles; 4.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started). 
+3.	Obtain missing DOIs and titles; 4.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started).
 
 The scripts in the current repository result in one single dataset that can be
 used for future meta-analyses. The dataset itself is available on DANS[NEEDS
@@ -52,7 +52,9 @@ To get started:
 `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
 `composite_label.R` - This script contains a function to create a column with the final inclusions.
 `identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
-`deduplicate.R` - This script contaions a function to deduplicate the records while maintaining all information.
+`deduplicate.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
+`quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
+`deduplicate_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
 
 
 ## Results
@@ -86,14 +88,23 @@ columns have been added:
   - 2 = depression
   - 3 = substance-abuse
 - `depression_included_corrected` (0, 1, NA):
-  Combining the information from the ..._included and quality_check columns,
+  Combining the information from the depression_included and quality_check columns,
   this column contains the inclusion/exclusion/not seen labels after correction.
+- `substance_included_corrected` (0, 1, NA):
+    Combining the information from the substance_included and quality_check columns,
+    this column contains the inclusion/exclusion/not seen labels after correction.
+- `anxiety_included_corrected` (0, 1, NA):
+  Combining the information from the anxiety_included and quality_check columns,
+  this column contains the inclusion/exclusion/not seen labels after correction.
+- `composite_label_corrected` (0, 1, NA):
+  A column indicating whether a record was included in at least one of the
+  corrected_subject columns: The results after taking the quality checks into account.
 - `data_extracted` (0, 1, NA):
   An empty column to be filled manually about which records have been extracted.
 
 For all columns where there are only 0's 1's and NA's, a `0` indicates a negative
 (excluded for example), while `1` indicates a positive (included for example). `NA`
-means `Not Available`. 
+means `Not Available`.
 
 
 ## Funding 
