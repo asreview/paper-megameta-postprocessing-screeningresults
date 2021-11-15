@@ -14,7 +14,8 @@ post-processing scripts to:
 1.	Merge the three output files after screening in
 ASReview;
 2.	Deal with noisy labels corrected in two rounds of quality checks;
-3.	Obtain missing DOIs and titles; 4.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started).
+3.	Obtain missing DOIs and titles; 
+4.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started).
 
 The scripts in the current repository result in one single dataset that can be
 used for future meta-analyses. The dataset itself is available on DANS[NEEDS
