@@ -4,7 +4,7 @@
 
 ################################################################################
 # This script creates from the input files (see below) the following output:   #
-# - megemeta_merged_after_screening_asreview                                                  #
+# - megemeta_merged_after_screening_asreview                                   #
 ################################################################################
 
 # install.packages
@@ -25,6 +25,8 @@ source("scripts/merge_datasets.R") # Merges all three input datasets
 source("scripts/composite_label.R") # Adds a column indicating final_inclusions
 source("scripts/identify_duplicates.R") # Identifies duplicates
 source("scripts/deduplicate.R") # Merging and deduplicating rows
+source("scripts/deduplicate_titles.R") # Deduplication and merging based on titles
+source("scripts/quality_check.R") # Adding columns with corrected values.
 
 # Creating Directories
 ## Output
@@ -33,12 +35,32 @@ dir.create("output")
 # Defining Paths
 DATA_PATH <- "data/"
 RESULTS_DATA_PATH <- "-screening-CNN-output.xlsx"
+QUALITY_CHECK_1_PATH <- "-incorrectly-excluded-records.xlsx"
+# TO BE CHANGED WHEN FINAL DATASET IS AVAILABLE:
+QUALITY_CHECK_2_PATH <- "-incorrectly-included-records-preliminary-results.xlsx"
 OUTPUT_PATH <- "output/"
 
-# Loading Input Data
+# Importing Results Data
 depression <- read_xlsx(paste0(DATA_PATH, "depression", RESULTS_DATA_PATH))
 substance <- read_xlsx(paste0(DATA_PATH, "substance", RESULTS_DATA_PATH))
 anxiety <- read_xlsx(paste0(DATA_PATH, "anxiety", RESULTS_DATA_PATH))
+
+# Importing Quality check Data
+## In short Quality check 1 checks which records have been falsely excluded.
+## Quality check 2 checks which records have been falsely included.
+## More information in the `quality_check.R` script. 
+
+## Quality check 1 Data
+depression_q1 <- read_xlsx(paste0(DATA_PATH, "depression", QUALITY_CHECK_1_PATH))
+substance_q1 <- read_xlsx(paste0(DATA_PATH, "substance_abuse", QUALITY_CHECK_1_PATH))
+anxiety_q1 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_1_PATH))
+
+
+### MISSING DATAFILES ###
+# # Quality check 2 Data
+depression_q2 <- read_xlsx(paste0(DATA_PATH, "depression", QUALITY_CHECK_2_PATH))
+substance_q2 <- read_xlsx(paste0(DATA_PATH, "substance", QUALITY_CHECK_2_PATH))
+anxiety_q2 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_2_PATH))
 
 ##### Data wrangling ######
 
@@ -69,6 +91,42 @@ df <- identify_duplicates(df)
 ##    the subjects) should stay NA!
 df <- deduplicate(df)
 
+## Double check numbers:
+sum(df$depression_included, na.rm = T)
+sum(df$substance_included, na.rm = T)
+sum(df$anxiety_included, na.rm = T)
+sum(df$composite_label, na.rm = T)
+
+# QUALITY CHECKS
+# This function adds multiple columns:
+# 1. "quality_check_1(0->1)": 
+#    Indicating for which subject a record was wrongly excluded:
+#    1 = Anxiety
+#    2 = Depression
+#    3 = Substance Abuse
+
+# 2. "quality_check_2(1->0)":      
+#    Indicating for which subject a record was wrongly included:
+#    1 = Anxiety
+#    2 = Depression
+#    3 = Substance Abuse
+
+# 3. "anxiety_included_corrected":
+#    The corrected label, taking the previous columns into account. 
+
+# 4. "depression_included_corrected"
+#    The corrected label, taking the previous columns into account. 
+
+# 5. "substance_included_corrected"  
+#    The corrected label, taking the previous columns into account. 
+
+# 6. "composite_label_corrected" 
+#    The corrected composite label, based on the subject_included_corrected
+#    columns.
+
+df <- quality_check(df)
+
+
 #### Preparation for exportation ####
 
 # SORTING
@@ -86,12 +144,37 @@ df <-
       depression_included,
       anxiety_included,
       substance_included,
-      composite_label
+      composite_label,
+      `quality_check_1(0->1)`,
+      `quality_check_2(1->0)`,
+      anxiety_included_corrected,
+      depression_included_corrected,
+      substance_included_corrected,
+      composite_label_corrected
     ),
     .after = last_col()
   )
 
+# REMOVE REDUNDANT COLUMNS
+df <- df %>%
+  select(
+    -c(
+      matchdoi,
+      doi_match,
+      doimatch,
+      included,
+      Column1,
+      Column2,
+      Column3,
+      asreview_ranking
+    )
+  )
+
+#TO DO: create daa_extracted function
+# However below the column is already created as a mockup:
+
+df <- df %>% mutate(data_extracted = NA)
 
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "megemeta_merged_after_screening_asreview"))
+write_xlsx(df, path = paste0(OUTPUT_PATH, "megemeta_merged_after_screening_asreview_preliminary.xlsx"))
 

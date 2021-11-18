@@ -1,8 +1,14 @@
 deduplicate <- function(df){
   
   # Remove irrelevant duplicates
-  # Irrelevant duplicates are those where there is no composite_label
-  df <- filter(df, composite_label == 1 | unique_record == 1 | is.na(unique_record))
+  df <-
+    filter(
+      df, composite_label %in% c(0,1) |
+        anxiety_included %in% c(0,1) |
+        depression_included %in% c(0,1) |
+        substance_included %in% c(0,1) |
+        unique_record == 1 | is.na(unique_record)
+    )
   
   # Create a subset of the duplicates
   df_doi <- filter(df, !is.na(doi))
@@ -32,7 +38,7 @@ deduplicate <- function(df){
     
     # Simple solution to merge the information across the duplicated rows is 
     # to sum the results:
-    # The columns to be merged are
+    # The subject columns to be merged are
     cols_merge <- c("doi", "depression_included", "substance_included", "anxiety_included", "composite_label")
     # "doi" is added as a grouping variable
     
@@ -48,14 +54,31 @@ deduplicate <- function(df){
                                    select(!doi)
                                  )
     
-    # Obtain the merged values
-    dedup_values <- dup_set %>%
+    # Obtain the merged value(s)
+    dup_set[which(dup_set$index == keep_index), cols_merge_final] <-
+      dup_set %>%
       select(all_of(cols_merge_final), doi) %>%
       summarise(across(cols_merge_final, sum, na.rm = T)) %>%
-      mutate(composite_label = case_when(composite_label > 1 ~ 1, TRUE ~ composite_label)) %>%
-      # With the line above, composite_label is max. 1     
       select(!doi)
     
+    # Precaution for composite label: 
+    # It should not exceed 1
+    # Should be NA when all cols are NA
+    dup_set[which(dup_set$index == keep_index), cols_merge] <-
+      dup_set[which(dup_set$index == keep_index),] %>%
+      select(cols_merge) %>%
+      mutate(
+        composite_label = case_when(
+          composite_label > 1 ~ 1,
+          is.na(depression_included) &
+            is.na(substance_included) & is.na(anxiety_included)
+          ~ NA_real_,
+          TRUE ~ composite_label
+        )
+      ) 
+    
+    # Select only the columns which have changed values
+    dedup_values <- dup_set[which(dup_set$index == keep_index), cols_merge_final]
     
     # REPLACE THE CORRECT COLUMNS IN DF WITH THE MERGED VALUES
     df[which(df$index == keep_index), cols_merge_final] <- dedup_values
