@@ -53,15 +53,15 @@ df <- composite_label(df)
 
 ############# BEGIN OF EXTRA TEST COMMANDS ##############
 
-# PART 2 (ONLY FOR TESTING!!!):
-## For the next part of the post-processing, 
-## doi's will be retrieved for the missing doi's.
-
-## For the testing phase of the scripts, we will only
-## retrieve the doi's for only the relevant records to save time. 
-## Therefore, the next part should be deleted for the final script.
-
-df <- df %>% filter(composite_label == 1)
+# # PART 2 (ONLY FOR TESTING!!!):
+# ## For the next part of the post-processing, 
+# ## doi's will be retrieved for the missing doi's.
+# 
+# ## For the testing phase of the scripts, we will only
+# ## retrieve the doi's for only the relevant records to save time. 
+# ## Therefore, the next part should be deleted for the final script.
+# 
+# df <- df %>% filter(composite_label == 1)
 
 ############## END OF EXTRA TEST COMMANDS ###############
 # THE COMMANDS BELOW ARE AGAIN FOR ANY SCRIPT:TESTING OR FINAL
