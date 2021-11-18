@@ -32,7 +32,7 @@ dir.create("output")
 
 # Defining Paths
 DATA_PATH <- "data/"
-PART_2_PATH <- "megameta_asreview_added_doi_part_2_preliminary.xlsx"
+PART_2_PATH <- "megameta_asreview_added_doi_part_2.xlsx"
 QUALITY_CHECK_1_PATH <- "-incorrectly-excluded-records.xlsx"
 # TO BE CHANGED WHEN FINAL DATASET IS AVAILABLE:
 QUALITY_CHECK_2_PATH <- "-incorrectly-included-records-preliminary-results.xlsx"
@@ -160,5 +160,5 @@ df <-
 df <- df %>% mutate(data_extracted = NA)
 
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "megameta_merged_after_screening_asreview_part_3_preliminary.xslx"))
+write_xlsx(df, path = paste0(OUTPUT_PATH, "megameta_merged_after_screening_asreview_part_3.xslx"))
 
