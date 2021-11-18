@@ -11,5 +11,8 @@ composite_label <- function(df){
       TRUE ~ NA_real_
     ))
   
+  # Add an index
+  df$index <- 1:length(df$depression_included)
+  
   return(df)
 }

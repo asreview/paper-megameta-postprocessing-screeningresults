@@ -1,10 +1,10 @@
-#############################
-####### Pre-processing ######
-#############################
+#####################################
+####### POST-PROCESSING PART 3 ######
+#####################################
 
 ################################################################################
 # This script creates from the input files (see below) the following output:   #
-# - megemeta_merged_after_screening_asreview                                   #
+# - megameta_merged_after_screening_asreview_part_3.xslx                       #
 ################################################################################
 
 # install.packages
@@ -21,10 +21,8 @@ library(tidyverse) # Data wrangling
 library(janitor)   # Deduplication
 
 # Loading functions
-source("scripts/merge_datasets.R") # Merges all three input datasets
-source("scripts/composite_label.R") # Adds a column indicating final_inclusions
 source("scripts/identify_duplicates.R") # Identifies duplicates
-source("scripts/deduplicate.R") # Merging and deduplicating rows
+source("scripts/deduplicate.R") # Deduplication and merging rows based on doi
 source("scripts/deduplicate_titles.R") # Deduplication and merging based on titles
 source("scripts/quality_check.R") # Adding columns with corrected values.
 
@@ -34,16 +32,27 @@ dir.create("output")
 
 # Defining Paths
 DATA_PATH <- "data/"
-RESULTS_DATA_PATH <- "-screening-CNN-output.xlsx"
+PART_2_PATH <- "megameta_asreview_added_doi_part_2_preliminary.xlsx"
 QUALITY_CHECK_1_PATH <- "-incorrectly-excluded-records.xlsx"
 # TO BE CHANGED WHEN FINAL DATASET IS AVAILABLE:
 QUALITY_CHECK_2_PATH <- "-incorrectly-included-records-preliminary-results.xlsx"
 OUTPUT_PATH <- "output/"
 
-# Importing Results Data
-depression <- read_xlsx(paste0(DATA_PATH, "depression", RESULTS_DATA_PATH))
-substance <- read_xlsx(paste0(DATA_PATH, "substance", RESULTS_DATA_PATH))
-anxiety <- read_xlsx(paste0(DATA_PATH, "anxiety", RESULTS_DATA_PATH))
+# Importing results from post-processing part 2
+df <- read_xlsx(paste0(OUTPUT_PATH, PART_2_PATH))
+
+## With the import, some columns were saved as log, instead of numeric.
+## The important columns to change are:
+cols_to_num <- c("depression_included", 
+                     "anxiety_included",
+                     "substance_included",
+                     "composite_label")
+
+## Change these columns to integers:
+df[, cols_to_num] <-
+  apply(df[, cols_to_num], 2, 
+        function(x)
+          as.numeric(as.character(x)))
 
 # Importing Quality check Data
 ## In short Quality check 1 checks which records have been falsely excluded.
@@ -62,19 +71,10 @@ depression_q2 <- read_xlsx(paste0(DATA_PATH, "depression", QUALITY_CHECK_2_PATH)
 substance_q2 <- read_xlsx(paste0(DATA_PATH, "substance", QUALITY_CHECK_2_PATH))
 anxiety_q2 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_2_PATH))
 
-##### Data wrangling ######
-
-# MERGING
-## First the datasets need to be merged
-df <- merge_datasets(depression, substance, anxiety)
-
-# FINAL INCLUSIONS
-## Next, let's add a column of composite_label.
-## Composite_label simply indicates whether the record was included.
-df <- composite_label(df)
+##### Data deduplication ######
 
 # IDENTIFY DUPLICATES
-## Then the duplicates need to be identified and deduplicated
+## The duplicates need to be identified and deduplicated
 ## This function adds two extra columns: 
 ## - index: Simply an index to be able to rearrange the order, while still
 ##          preserving the knowledge of the order in which the records were
@@ -155,26 +155,10 @@ df <-
     .after = last_col()
   )
 
-# REMOVE REDUNDANT COLUMNS
-df <- df %>%
-  select(
-    -c(
-      matchdoi,
-      doi_match,
-      doimatch,
-      included,
-      Column1,
-      Column2,
-      Column3,
-      asreview_ranking
-    )
-  )
-
-#TO DO: create daa_extracted function
-# However below the column is already created as a mockup:
-
+# ADD DATA-EXTRACTED COLUMN
+# However below the column is created as a mockup
 df <- df %>% mutate(data_extracted = NA)
 
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "megemeta_merged_after_screening_asreview_preliminary.xlsx"))
+write_xlsx(df, path = paste0(OUTPUT_PATH, "megameta_merged_after_screening_asreview_part_3_preliminary.xslx"))
 

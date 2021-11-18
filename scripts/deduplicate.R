@@ -1,15 +1,5 @@
 deduplicate <- function(df){
   
-  # Remove irrelevant duplicates
-  df <-
-    filter(
-      df, composite_label %in% c(0,1) |
-        anxiety_included %in% c(0,1) |
-        depression_included %in% c(0,1) |
-        substance_included %in% c(0,1) |
-        unique_record == 1 | is.na(unique_record)
-    )
-  
   # Create a subset of the duplicates
   df_doi <- filter(df, !is.na(doi))
   df_dup <- get_dupes(df_doi, doi)
@@ -67,16 +57,16 @@ deduplicate <- function(df){
     dup_set[which(dup_set$index == keep_index), cols_merge] <-
       dup_set[which(dup_set$index == keep_index),] %>%
       select(cols_merge) %>%
-      mutate(
-        composite_label = case_when(
-          composite_label > 1 ~ 1,
-          is.na(depression_included) &
-            is.na(substance_included) & is.na(anxiety_included)
-          ~ NA_real_,
-          TRUE ~ composite_label
-        )
-      ) 
-    
+        mutate(composite_label = case_when(
+          df$depression_included == 1 & !is.na(df$depression_included) ~ 1,
+          df$substance_included == 1 & !is.na(df$substance_included) ~ 1 ,
+          df$anxiety_included == 1 & !is.na(df$anxiety_included) ~ 1,
+          df$depression_included == 0 & !is.na(df$depression_included) ~ 0,
+          df$substance_included == 0 & !is.na(df$substance_included) ~ 0,
+          df$anxiety_included == 0 & !is.na(df$anxiety_included) ~ 0,
+          TRUE ~ NA_real_
+        ))
+
     # Select only the columns which have changed values
     dedup_values <- dup_set[which(dup_set$index == keep_index), cols_merge_final]
     
