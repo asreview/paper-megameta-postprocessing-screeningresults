@@ -13,9 +13,9 @@ post-processing scripts to:
 
 1.	Merge the three output files after screening in
 ASReview;
-2.	Deal with noisy labels corrected in two rounds of quality checks;
-3.	Obtain missing DOIs and titles; 
-4.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started).
+2.	Obtain missing DOIs;
+3.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started).
+4. Deal with noisy labels corrected in two rounds of quality checks;
 
 The scripts in the current repository result in one single dataset that can be
 used for future meta-analyses. The dataset itself is available on DANS[NEEDS
@@ -45,17 +45,30 @@ ASReview:
 
 To get started:
 1. Open the `pre-processing.Rproject` in Rstudio;
-2. Open `scripts/master_script_merging_after_asreview.R`;
+2. Open `scripts/master_script_merging_after_asreview_part_1.R`;
 3. Install, if necessary, the packages required by uncommenting the lines;
-4. Run the script.
+
+## Obtaining the final results
+1. Open the `pre-processing.Rproject` in Rstudio;
+2. Open `scripts/master_script_merging_after_asreview_part_1.R`;
+3. Run the script. At the end of part_1, a file named  `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is created and
+saved in the output folder.
+4. Next, run the `scripts/crossref_doi_retrieval_part_2.ipynb` to retrieve the missing
+doi's. The input for this script `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is automated.
+The output from the doi retrieval is also stored in the output folder:
+`megameta_asreview_added_doi_part_2_preliminary.xlsx`
+Note. This might take some time!
+5. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`.
+Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is automatically retrieved. 
+This will finally result in the final dataset stored in the output folder: `megameta_merged_after_screening_asreview_postprocessed_preliminary.xslx`
 
 ### Post-processing functions
-`merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
-`composite_label.R` - This script contains a function to create a column with the final inclusions.
-`identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
-`deduplicate.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
-`quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
-`deduplicate_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
+-  `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
+-  `composite_label.R` - This script contains a function to create a column with the final inclusions.
+-  `identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
+-  `deduplicate.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
+-  `quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
+-  `deduplicate_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
 
 
 ## Results
@@ -108,7 +121,7 @@ For all columns where there are only 0's 1's and NA's, a `0` indicates a negativ
 means `Not Available`.
 
 
-## Funding 
+## Funding
 This project is funded by a grant from the Centre for Urban Mental Health, University of Amsterdam, The Netherlands
 
 ## Licence

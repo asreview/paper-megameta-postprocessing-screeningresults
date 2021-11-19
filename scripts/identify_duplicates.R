@@ -1,6 +1,4 @@
 identify_duplicates <- function(df){
-  # Add an index
-  df$index <- 1:length(df$depression_included)
   
   # Split the data into a dataset with and without missing dois
   df_doi <- df %>%
