@@ -51,22 +51,36 @@ deduplicate <- function(df){
       summarise(across(cols_merge_final, sum, na.rm = T)) %>%
       select(!doi)
     
-    # Precaution for composite label: 
-    # It should not exceed 1
+    # Precaution for all labels: 
+    # they should not exceed 1!
+    # Moreover, Composite label should be recalculated
     # Should be NA when all cols are NA
     dup_set[which(dup_set$index == keep_index), cols_merge] <-
-      dup_set[which(dup_set$index == keep_index),] %>%
+      dup_set[which(dup_set$index == keep_index), ] %>%
       select(cols_merge) %>%
-        mutate(composite_label = case_when(
+      mutate(
+        depression_included = case_when(depression_included > 1 ~ 1
+                                        TRUE ~ depression_included),
+        substance_included = case_when(substance_included > 1 ~ 1
+                                       TRUE ~ substance_included),
+        anxiety_included = case_when(anxiety_included > 1 ~ 1
+                                     TRUE ~ anxiety_included),
+        composite_label = case_when(
           df$depression_included == 1 & !is.na(df$depression_included) ~ 1,
-          df$substance_included == 1 & !is.na(df$substance_included) ~ 1 ,
-          df$anxiety_included == 1 & !is.na(df$anxiety_included) ~ 1,
-          df$depression_included == 0 & !is.na(df$depression_included) ~ 0,
-          df$substance_included == 0 & !is.na(df$substance_included) ~ 0,
-          df$anxiety_included == 0 & !is.na(df$anxiety_included) ~ 0,
+          df$substance_included == 1 &
+            !is.na(df$substance_included) ~ 1 ,
+          df$anxiety_included == 1 &
+            !is.na(df$anxiety_included) ~ 1,
+          df$depression_included == 0 &
+            !is.na(df$depression_included) ~ 0,
+          df$substance_included == 0 &
+            !is.na(df$substance_included) ~ 0,
+          df$anxiety_included == 0 &
+            !is.na(df$anxiety_included) ~ 0,
           TRUE ~ NA_real_
-        ))
-
+        )
+      )
+    
     # Select only the columns which have changed values
     dedup_values <- dup_set[which(dup_set$index == keep_index), cols_merge_final]
     
