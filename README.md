@@ -22,7 +22,32 @@ used for future meta-analyses. The dataset itself is available on DANS[NEEDS
 LINK].  
 
 ## Datasets
-Add the required data into the data folder available on DANS[NEEDS LINK].
+
+
+### Test Data
+The `/data` folder contains test-files which can be used to test the pipeline.
+
+```
+NOTE: When you want to use these test files; please make sure that the empirical
+data is not saved solely in the same data folder as where these test files are stored!
+The next step will overwrite these files.
+```
+
+1. Open the `pre-processing.Rproject` in Rstudio;
+2. Open `scrips/change_test_file_names.R` and run the script. The test files
+will now have the same file names as those of the empirical data. See [datasets](#Datasets)
+for the specific names.
+3. Continue with **Running the complete pipeline**.
+
+
+### Empirical Data
+
+The empricial data is available on DANS[NEEDS LINK]. Request access, donwload the files, 
+and add the required data into the data folder. 
+
+### Data Files Names
+
+The following datasets should be available in `/data`:
 
 1. The three export-datasets with the partly labelled data after screening in
 ASReview:  
@@ -60,34 +85,14 @@ To get started:
 
 ## Running the complete pipeline
 
-### Using test data
-Within the data folder, there are test-files which can be used to test the pipeline.
-
-```
-NOTE: When you want to use these test files; please make sure that the empirical
-data is not saved solely in the same data folder as where these test files are stored!
-The next step will overwrite these files. To be sure, save the empirical results
-somewhere else on your device and put them back in the data folder when you want
-to run this data through the pipeline.
-```
-
-1. Open the `pre-processing.Rproject` in Rstudio;
-2. Open `scrips/change_test_file_names.R` and run the script. The test files
-will now have the same file names as those of the empirical data. See [datasets](#Datasets)
-for the specific names.
-3. Continue from step 2 from the [using empirical data](#using-empirical-data) instructions
-
-### Using empirical data
-1. Open the `pre-processing.Rproject` in Rstudio;
-2. Open `scripts/master_script_merging_after_asreview_part_1.R`;
-3. Run the script. At the end of part_1, a file named  `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is created and
-saved in the output folder.
-4. Next, run the `scripts/crossref_doi_retrieval_part_2.ipynb` to retrieve the missing
+1. Run the `script master_script_merging_after_asreview_part_1.R` to merge the datasets. At the end of part_1, a file named  
+`megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is created and saved in `/output`.
+2. Next, run the `scripts/crossref_doi_retrieval_part_2.ipynb` to retrieve the missing
 doi's. The input for this script `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is automated.
 The output from the doi retrieval is also stored in the output folder:
 `megameta_asreview_added_doi_part_2_preliminary.xlsx`
 Note. This might take some time!
-5. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`.
+3. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`.
 Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is automatically retrieved.
 This will finally result in the final dataset stored in the output folder: `megameta_merged_after_screening_asreview_postprocessed_preliminary.xslx`
 
