@@ -35,7 +35,7 @@ DATA_PATH <- "data/"
 PART_2_PATH <- "megameta_asreview_added_doi_part_2.xlsx"
 QUALITY_CHECK_1_PATH <- "-incorrectly-excluded-records.xlsx"
 # TO BE CHANGED WHEN FINAL DATASET IS AVAILABLE:
-QUALITY_CHECK_2_PATH <- "-incorrectly-included-records.xlsx"
+QUALITY_CHECK_2_PATH <- "-incorrectly-included-records-preliminary-results.xlsx"
 OUTPUT_PATH <- "output/"
 
 # Importing results from post-processing part 2
