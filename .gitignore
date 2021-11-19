@@ -54,6 +54,8 @@ po/*~
 
 # End of https://www.toptal.com/developers/gitignore/api/r
 
+## Jupyter notebook checkpoint ##
+scripts/.ipynb_checkpoints
 
 ## Data specific gitignore ##
 
