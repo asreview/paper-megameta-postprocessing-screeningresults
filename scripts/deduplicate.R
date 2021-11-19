@@ -59,24 +59,24 @@ deduplicate <- function(df){
       dup_set[which(dup_set$index == keep_index), ] %>%
       select(cols_merge) %>%
       mutate(
-        depression_included = case_when(depression_included > 1 ~ 1
+        depression_included = case_when(depression_included > 1 ~ 1,
                                         TRUE ~ depression_included),
-        substance_included = case_when(substance_included > 1 ~ 1
+        substance_included = case_when(substance_included > 1 ~ 1,
                                        TRUE ~ substance_included),
-        anxiety_included = case_when(anxiety_included > 1 ~ 1
+        anxiety_included = case_when(anxiety_included > 1 ~ 1,
                                      TRUE ~ anxiety_included),
         composite_label = case_when(
-          df$depression_included == 1 & !is.na(df$depression_included) ~ 1,
-          df$substance_included == 1 &
-            !is.na(df$substance_included) ~ 1 ,
-          df$anxiety_included == 1 &
-            !is.na(df$anxiety_included) ~ 1,
-          df$depression_included == 0 &
-            !is.na(df$depression_included) ~ 0,
-          df$substance_included == 0 &
-            !is.na(df$substance_included) ~ 0,
-          df$anxiety_included == 0 &
-            !is.na(df$anxiety_included) ~ 0,
+          depression_included == 1 & !is.na(depression_included) ~ 1,
+          substance_included == 1 &
+            !is.na(substance_included) ~ 1 ,
+          anxiety_included == 1 &
+            !is.na(anxiety_included) ~ 1,
+          depression_included == 0 &
+            !is.na(depression_included) ~ 0,
+          substance_included == 0 &
+            !is.na(substance_included) ~ 0,
+          anxiety_included == 0 &
+            !is.na(anxiety_included) ~ 0,
           TRUE ~ NA_real_
         )
       )

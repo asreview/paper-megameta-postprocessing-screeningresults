@@ -10,6 +10,12 @@
 # In case you already have downloaded the empirical data from DANS, you do not
 # have to run this script.
 
+# Install necessary packages if not installed already
+#install.packages("tidyverse")
+
+# Loading required packages
+library(tidyverse)
+
 DATA_PATH <-"data/"
 
 # Obtain the names of the test files

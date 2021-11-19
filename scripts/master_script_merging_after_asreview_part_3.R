@@ -140,7 +140,6 @@ df <- arrange(df, index)
 df <-
   df %>% relocate(
     c(
-      asreview_ranking,
       depression_included,
       anxiety_included,
       substance_included,
@@ -160,5 +159,5 @@ df <-
 df <- df %>% mutate(data_extracted = NA)
 
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "megameta_merged_after_screening_asreview_part_3.xslx"))
+write_xlsx(df, path = paste0(OUTPUT_PATH, "megameta_merged_after_screening_asreview_part_3.xlsx"))
 
