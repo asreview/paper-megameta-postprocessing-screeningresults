@@ -60,3 +60,6 @@ po/*~
 ### DO NOT UPLOAD THE DATA ###
 data/*.xlsx
 output/*.xlsx
+
+### DO UPLOAD TEST DATA ###
+!data/TEST*.xlsx
