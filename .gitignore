@@ -59,8 +59,7 @@ po/*~
 
 ### DO NOT UPLOAD THE DATA ###
 data/*.xlsx
-data/real-data/*.xlsx
 output/*.xlsx
 
 ### DO UPLOAD TEST DATA ###
-!data/test-files/*.xlsx
+!data/TEST*.xlsx
