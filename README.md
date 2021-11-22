@@ -42,8 +42,8 @@ for the specific names.
 
 ### Empirical Data
 
-The empricial data is available on DANS[NEEDS LINK]. Request access, donwload the files, 
-and add the required data into the data folder. 
+The empricial data is available on DANS[NEEDS LINK]. Request access, donwload the files,
+and add the required data into the data folder.
 
 ### Data Files Names
 
@@ -85,19 +85,23 @@ To get started:
 
 ## Running the complete pipeline
 
-1. Run the `script master_script_merging_after_asreview_part_1.R` to merge the datasets. At the end of part_1, a file named  
-`megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is created and saved in `/output`.
-2. Next, run the `scripts/crossref_doi_retrieval_part_2.ipynb` to retrieve the missing
-doi's. The input for this script `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is automated.
+1. Open the `pre-processing.Rproject` in Rstudio and run the `script master_script_merging_after_asreview_part_1.R` to merge the datasets.
+At the end of part_1, a file named  
+`megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is created
+and saved in `/output`.
+2. Next, run the `scripts/crossref_doi_retrieval_part_2.ipynb` in jupyter notebook
+to retrieve the missing doi's. The input for this script `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is automated.
 The output from the doi retrieval is also stored in the output folder:
 `megameta_asreview_added_doi_part_2_preliminary.xlsx`
 Note. This might take some time!
-3. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`.
-Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is automatically retrieved.
+3. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`
+back in the Rproject in Rstudio.
+Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is
+automatically retrieved.
 This will finally result in the final dataset stored in the output folder: `megameta_merged_after_screening_asreview_postprocessed_preliminary.xslx`
 
 ## Post-processing functions
--  `change_test_file_names.R` - With this script the filenames of the test files are converted to the empirical datafile names. 
+-  `change_test_file_names.R` - With this script the filenames of the test files are converted to the empirical datafile names.
 -  `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
 -  `composite_label.R` - This script contains a function to create a column with the final inclusions.
 -  `identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
