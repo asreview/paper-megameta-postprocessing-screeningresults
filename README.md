@@ -95,7 +95,7 @@ The output from the doi retrieval is also stored in the output folder:
 `megameta_asreview_added_doi_part_2_preliminary.xlsx`
 Note. This might take some time!
 3. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`
-back in Rproject in Rstudio.
+back in the Rproject in Rstudio.
 Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is
 automatically retrieved.
 This will finally result in the final dataset stored in the output folder: `megameta_merged_after_screening_asreview_postprocessed_preliminary.xslx`
