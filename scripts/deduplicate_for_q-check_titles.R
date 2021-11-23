@@ -12,7 +12,7 @@
 # function. This function only uses the elements from the deduplicate.R 
 # script.
 
-deduplicate_titles <- function(df, error_set){
+deduplicate_q_check <- function(df, error_set){
 
   # First make sure that there are no empty titles
   ## If there are, they should be replaced with NA

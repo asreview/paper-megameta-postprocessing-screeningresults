@@ -22,8 +22,8 @@ library(janitor)   # Deduplication
 
 # Loading functions
 source("scripts/identify_duplicates.R") # Identifies duplicates
-source("scripts/deduplicate.R") # Deduplication and merging rows based on doi
-source("scripts/deduplicate_titles.R") # Deduplication and merging based on titles
+source("scripts/deduplicate_doi.R") # Deduplication and merging rows based on doi
+source("scripts/deduplicate_for_q-check_titles.R") # Deduplication and merging based on titles for the quality checks
 source("scripts/quality_check.R") # Adding columns with corrected values.
 
 # Creating Directories
