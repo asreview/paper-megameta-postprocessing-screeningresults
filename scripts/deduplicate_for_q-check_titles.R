@@ -36,7 +36,7 @@ deduplicate_q_check <- function(df, error_set){
     mutate(dup_id = cur_group_id())
   
   # Merge duplicate rows
-  for(i in 1:max(title_set$dup_id)){
+  for(i in seq(unique(title_set$dup_id))){
     
     # select a pair of duplicates
     dup_set <- title_set[which(title_set$dup_id == i),] 
@@ -72,64 +72,80 @@ deduplicate_q_check <- function(df, error_set){
                                    select(!title)
     ) # close cols_merge_final
     
-    # Obtain the merged value(s)
-    dup_set[which(dup_set$index == keep_index), cols_merge_final] <-
-      dup_set %>%
-      select(all_of(cols_merge_final), title) %>%
-      summarise(across(cols_merge_final, sum, na.rm = T)) %>%
-      select(!title)
+    # In case the composite label is present in cols_merge_final,
+    # we know that at least one of the duplicates has been labeled for at least
+    # one subject. 
     
-    # Precaution for all labels: 
-    # they should not exceed 1!
-    # Moreover, Composite label should be recalculated
-    # Should be NA when all cols are NA
-    dup_set[which(dup_set$index == keep_index), cols_merge] <-
-      dup_set[which(dup_set$index == keep_index), ] %>%
-      select(cols_merge) %>%
-      mutate(
-        depression_included = case_when(depression_included > 1 ~ 1,
-                                        TRUE ~ depression_included),
-        substance_included = case_when(substance_included > 1 ~ 1,
-                                       TRUE ~ substance_included),
-        anxiety_included = case_when(anxiety_included > 1 ~ 1,
-                                     TRUE ~ anxiety_included),
-        composite_label = case_when(
-          depression_included == 1 & !is.na(depression_included) ~ 1,
-          substance_included == 1 &
-            !is.na(substance_included) ~ 1 ,
-          anxiety_included == 1 &
-            !is.na(anxiety_included) ~ 1,
-          depression_included == 0 &
-            !is.na(depression_included) ~ 0,
-          substance_included == 0 &
-            !is.na(substance_included) ~ 0,
-          anxiety_included == 0 &
-            !is.na(anxiety_included) ~ 0,
-          TRUE ~ NA_real_
+    if ("composite_label" %in% cols_merge_final) {
+      
+      # Merging the rows has to take into account the aggregation of the
+      # labels.
+      
+      # Obtain the merged value(s)
+      dup_set[which(dup_set$index == keep_index), cols_merge_final] <-
+        dup_set %>%
+        select(all_of(cols_merge_final), title) %>%
+        summarise(across(cols_merge_final, sum, na.rm = T)) %>%
+        select(!title)
+      
+      # Precaution for all labels:
+      # they should not exceed 1!
+      # Moreover, Composite label should be recalculated
+      # Should be NA when all cols are NA
+      dup_set[which(dup_set$index == keep_index), cols_merge] <-
+        dup_set[which(dup_set$index == keep_index),] %>%
+        select(cols_merge) %>%
+        mutate(
+          depression_included = case_when(depression_included > 1 ~ 1,
+                                          TRUE ~ depression_included),
+          substance_included = case_when(substance_included > 1 ~ 1,
+                                         TRUE ~ substance_included),
+          anxiety_included = case_when(anxiety_included > 1 ~ 1,
+                                       TRUE ~ anxiety_included),
+          composite_label = case_when(
+            depression_included == 1 & !is.na(depression_included) ~ 1,
+            substance_included == 1 &
+              !is.na(substance_included) ~ 1 ,
+            anxiety_included == 1 &
+              !is.na(anxiety_included) ~ 1,
+            depression_included == 0 &
+              !is.na(depression_included) ~ 0,
+            substance_included == 0 &
+              !is.na(substance_included) ~ 0,
+            anxiety_included == 0 &
+              !is.na(anxiety_included) ~ 0,
+            TRUE ~ NA_real_
+          )
         )
-      )
-    
-    # Select only the columns which have changed values
-    dedup_values <- dup_set[which(dup_set$index == keep_index), cols_merge_final]
-    
-    
-    # REPLACE THE CORRECT COLUMNS IN DF WITH THE MERGED VALUES
-    df[which(df$index == keep_index), cols_merge_final] <- dedup_values
-    
-    # REMOVE DUPLICATE ROW(S)
-    df <- df[-which(df$index %in% remove_index),]
+      
+      # Select only the columns which have changed values
+      dedup_values <-
+        dup_set[which(dup_set$index == keep_index), cols_merge_final]
+      
+      
+      # REPLACE THE CORRECT COLUMNS IN DF WITH THE MERGED VALUES
+      df[which(df$index == keep_index), cols_merge_final] <-
+        dedup_values
+      
+      # REMOVE DUPLICATE ROW(S)
+      df <- df[-which(df$index %in% remove_index), ]
+      
+    } else {
+      
+      # If none of the duplicates have received any label, deduplication is easy!
+      # The rows which can be removed according to remove_index can simply be deleted:
+      df <- df[-which(df$index %in% remove_index),]
+      
+    } # close else statement
     
   } # close for loop
-  
-  return(df)
   
   } else {
     
     return(df)
     
-  }
+  } # close else statement to check whether there are any duplicates
   
-  
-  
+  return(df)
   
 } # close deduplication function

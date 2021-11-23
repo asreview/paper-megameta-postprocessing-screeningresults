@@ -1,4 +1,8 @@
-deduplicate <- function(df){
+deduplicate_doi <- function(df){
+  
+  # Create counters for number of duplicates:
+  n_labeled_dupes <- 0
+  n_no_label_dupes <-  0
   
   # Create a subset of the duplicates
   df_doi <- filter(df, !is.na(doi))
@@ -10,7 +14,7 @@ deduplicate <- function(df){
     mutate(dup_id = cur_group_id())
 
   # Merge duplicate rows
-  for(i in 1:max(doi_set$dup_id)){
+  for(i in seq(unique(doi_set$dup_id))){
      
     # Add a counter:
     print(paste("deduplicating set", i, "out of", max(doi_set$dup_id)))
@@ -26,8 +30,6 @@ deduplicate <- function(df){
     
     ## MERGING CODE ##
     
-    # Simple solution to merge the information across the duplicated rows is 
-    # to sum the results:
     # The subject columns to be merged are
     cols_merge <- c("doi", "depression_included", "substance_included", "anxiety_included", "composite_label")
     # "doi" is added as a grouping variable
@@ -44,7 +46,17 @@ deduplicate <- function(df){
                                    select(!doi)
                                  )
     
-    # Obtain the merged value(s)
+    # In case the composite label is present in cols_merge_final,
+    # we know that at least one of the duplicates has been labeled for at least
+    # one subject. 
+    
+    if ("composite_label" %in% cols_merge_final) {
+      
+      # Merging the rows has to take into account the aggregation of the
+      # labels. Simple solution to merge the information across the duplicated rows is 
+      # to sum the results:
+      
+      # Obtain the merged value(s)
     dup_set[which(dup_set$index == keep_index), cols_merge_final] <-
       dup_set %>%
       select(all_of(cols_merge_final), doi) %>%
@@ -89,7 +101,26 @@ deduplicate <- function(df){
     
     # REMOVE DUPLICATE ROW(S)
     df <- df[-which(df$index %in% remove_index),]
-  }
+    
+    # ADD ONE TO COUNTER OF LABELED DUPES
+    n_labeled_dupes <- n_labeled_dupes + 1
+    
+    } else {
+      
+      # If none of the duplicates have received any label, deduplication is easy!
+      # The rows which can be removed according to remove_index can simply be deleted:
+      df <- df[-which(df$index %in% remove_index), ]
+      n_no_label_dupes <- n_no_label_dupes + 1
+    } # close else statement
+    
+    
+  } # close for loop
+  
+  # Print information about the deduplication process
+  cat(paste("In total", max(doi_set$dup_id), "sets were deduplicated based on doi, of which: \n",
+            n_labeled_dupes, "sets had at least one label \n",
+            n_no_label_dupes, "sets had no label at all \n"))
 
   return(df)
-}
+  
+} # close function
