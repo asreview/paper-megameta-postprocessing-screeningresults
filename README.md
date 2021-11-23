@@ -113,17 +113,17 @@ However, extra deduplication is necessary because deduplication only based on do
 To be transparent, the latter deduplication round will also print the number of identified duplicates for both a the conservative strategy and a less conservative strategy. In this way, we can compare the impact of different duplication strategies.
 
 The exact strategy of the second deduplication round is as follows:
-  1. Set all necessary columns (see below) for deduplication to lowercase characters and remove any punctuation marks.
-  2. Count duplicates identified using conservative deduplication strategy. This strategy will identify duplicates based on:
-    - Author
-    - Title
-    - Year
-    - Journal or issn (if either journal or issn is an exact match, together with the above, the record is marked as a duplicate)
-   3. Count duplicates identified using a less conservative deduplication strategy. This strategy will identify duplicates based on:
-     - Author
-     - Title
-     - Year
-   4. Deduplicate using the strategy from 2.
+1. Set all necessary columns (see below) for deduplication to lowercase characters and remove any punctuation marks.
+2. Count duplicates identified using conservative deduplication strategy. This strategy will identify duplicates based on:
+  - Author
+  - Title
+  - Year
+  - Journal or issn (if either journal or issn is an exact match, together with the above, the record is marked as a duplicate)
+3. Count duplicates identified using a less conservative deduplication strategy. This strategy will identify duplicates based on:
+  - Author
+  - Title
+  - Year
+4. Deduplicate using the strategy from 2.
 
 
 ## Post-processing functions
