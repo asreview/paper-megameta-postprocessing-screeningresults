@@ -29,9 +29,9 @@ quality_check <- function(df){
   # Step 1 deduplication for those where the doi is present:
   # Deduplicate the merged dataset based on titles only for those records that
   # should be altered according to the quality check datasets. 
-  df <- deduplicate_titles(df, anxiety_q1)
-  df <- deduplicate_titles(df, depression_q1)
-  df <- deduplicate_titles(df, substance_q1)
+  df <- deduplicate_q_check(df, anxiety_q1)
+  df <- deduplicate_q_check(df, depression_q1)
+  df <- deduplicate_q_check(df, substance_q1)
   
   # Step 2:
   # Find the rows in the merged dataframe that should be adapted, without
@@ -64,9 +64,9 @@ quality_check <- function(df){
   # Step 1 deduplication for those where the doi is present:
   # Deduplicate the merged dataset based on titles only for those records that
   # should be altered according to the quality check datasets. 
-  df <- deduplicate_titles(df, anxiety_q2)
-  df <- deduplicate_titles(df, substance_q2)
-  df <- deduplicate_titles(df, depression_q2)
+  df <- deduplicate_q_check(df, anxiety_q2)
+  df <- deduplicate_q_check(df, substance_q2)
+  df <- deduplicate_q_check(df, depression_q2)
   
   # Step 2:
   # Find the rows in the merged dataframe that should be adapted, without

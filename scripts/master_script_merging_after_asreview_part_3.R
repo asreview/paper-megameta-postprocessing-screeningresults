@@ -22,8 +22,9 @@ library(janitor)   # Deduplication
 
 # Loading functions
 source("scripts/identify_duplicates.R") # Identifies duplicates
-source("scripts/deduplicate.R") # Deduplication and merging rows based on doi
-source("scripts/deduplicate_titles.R") # Deduplication and merging based on titles
+source("scripts/deduplicate_doi.R") # Deduplication and merging rows based on doi
+source("scripts/deduplicate_for_q-check_titles.R") # Deduplication and merging based on titles for the quality checks
+source("scripts/deduplicate_conservative.R") # an extra round of conservative deduplication
 source("scripts/quality_check.R") # Adding columns with corrected values.
 
 # Creating Directories
@@ -89,7 +90,8 @@ df <- identify_duplicates(df)
 ## -  A 0 should overwrite an NA.
 ## -  Only NA in a column (meaning that a record was not present in one of 
 ##    the subjects) should stay NA!
-df <- deduplicate(df)
+df <- deduplicate_doi(df)
+df <- deduplicate_conservative(df)
 
 ## Double check numbers:
 sum(df$depression_included, na.rm = T)

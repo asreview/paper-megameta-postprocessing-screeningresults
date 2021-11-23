@@ -100,15 +100,41 @@ Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is
 automatically retrieved.
 This will finally result in the final dataset stored in the output folder: `megameta_merged_after_screening_asreview_postprocessed_preliminary.xslx`
 
+## Deduplication strategy
+
+Keeping in mind that deduplication is never perfect, this script contains a function
+to deduplicate the records in a very conservative way. It is assumed that it is better
+to miss duplicates within the data, than to falsely deduplicate records.
+
+Therefore deduplication within the `master_script_merging_after_asreview_part_3.R`
+is based on two different rounds of deduplication. The first round uses doi to identify duplicates.
+However, extra deduplication is necessary because deduplication only based on doi is not sufficient. Many doi's, even after crossref doi retrieval, are still missing. Or in some cases the doi's may be different for otherwise seemingly identical records. Therefore, an extra conservative round of deduplication is also applied to the data.
+
+To be transparent, the latter deduplication round will also print the number of identified duplicates for both a the conservative strategy and a less conservative strategy. In this way, we can compare the impact of different duplication strategies.
+
+The exact strategy of the second deduplication round is as follows:
+1. Set all necessary columns (see below) for deduplication to lowercase characters and remove any punctuation marks.
+2. Count duplicates identified using conservative deduplication strategy. This strategy will identify duplicates based on:
+  - Author
+  - Title
+  - Year
+  - Journal or issn (if either journal or issn is an exact match, together with the above, the record is marked as a duplicate)
+3. Count duplicates identified using a less conservative deduplication strategy. This strategy will identify duplicates based on:
+  - Author
+  - Title
+  - Year
+4. Deduplicate using the strategy from 2.
+
+
 ## Post-processing functions
 -  `change_test_file_names.R` - With this script the filenames of the test files are converted to the empirical datafile names.
 -  `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
 -  `composite_label.R` - This script contains a function to create a column with the final inclusions.
 -  `identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
--  `deduplicate.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
+-  `deduplicate_doi.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
 -  `quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
--  `deduplicate_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
-
+-  `deduplicate_for_q-check_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
+- `deduplicate_conservatively.R` - this script contains a function to deduplicate the records in a  conservative way based on title, author, year and journal/issn
 
 ## Results
 The result of the `master_script_merging_after_asreview.R` is
