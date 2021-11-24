@@ -80,25 +80,31 @@ above.
 
 To get started:
 1. Open the `pre-processing.Rproject` in Rstudio;
-2. Open `scripts/master_script_merging_after_asreview_part_1.R`;
+2. Open `scripts/master_script_merging_after_asreview.R`;
 3. Install, if necessary, the packages required by uncommenting the lines and running them.
 
 ## Running the complete pipeline
 
-1. Open the `pre-processing.Rproject` in Rstudio and run the `script master_script_merging_after_asreview_part_1.R` to merge the datasets.
-At the end of part_1, a file named  
-`megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is created
+1. Open the `pre-processing.Rproject` in Rstudio and run the `master_script_merging_after_asreview.R` to merge the datasets.
+At the end of the merging script, a file named  
+`megameta_merged_merged.xlsx` is created
 and saved in `/output`.
-2. Next, run the `scripts/crossref_doi_retrieval_part_2.ipynb` in jupyter notebook
-to retrieve the missing doi's. The input for this script `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is automated.
+2. Next, run the `scripts/crossref_doi_retrieval.ipynb` in jupyter notebook
+to retrieve the missing doi's. The input for this script `megameta_merged_merged.xlsx` is automated.
 The output from the doi retrieval is also stored in the output folder:
-`megameta_asreview_added_doi_part_2_preliminary.xlsx`
+`megameta_asreview_doi_retrieved.xlsx`
 Note. This might take some time!
-3. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`
+3. For the deduplication part, open and run `scripts/master_script_deduplication.R`
 back in the Rproject in Rstudio.
-Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is
+Again the input data (`megameta_asreview_doi_retrieved.xlsx`) is
 automatically retrieved.
-This will finally result in the final dataset stored in the output folder: `megameta_merged_after_screening_asreview_postprocessed_preliminary.xslx`
+This results in the following dataset stored in the output folder: `megameta_asreview_deduplicated.xslx`
+4. Lastly, perform two quality checks by running the master_script_quality_check.R.
+This script uses the deduplicated dataset as input and performs 2 quality checks:
+    1. Change the labels of incorrectly excluded records to included.
+    2. Change the labels of incorrectly included records to excluded.
+They result in corrected columns for both the subjects and the composite_label.
+    
 
 ## Deduplication strategy
 
@@ -106,9 +112,14 @@ Keeping in mind that deduplication is never perfect, this script contains a func
 to deduplicate the records in a very conservative way. It is assumed that it is better
 to miss duplicates within the data, than to falsely deduplicate records.
 
-Therefore deduplication within the `master_script_merging_after_asreview_part_3.R`
+Therefore deduplication within the `master_script_deduplication.R`
 is based on two different rounds of deduplication. The first round uses doi to identify duplicates.
-However, extra deduplication is necessary because deduplication only based on doi is not sufficient. Many doi's, even after crossref doi retrieval, are still missing. Or in some cases the doi's may be different for otherwise seemingly identical records. Therefore, an extra conservative round of deduplication is also applied to the data.
+However, extra deduplication is necessary because deduplication only based on doi is not sufficient.
+Many doi's, even after crossref doi retrieval, are still missing.
+Or in some cases the doi's may be different for otherwise seemingly identical records.
+Therefore, an extra conservative round of deduplication is also applied to the data.
+This conservative strategy was devised with the help of @bmkramer.
+The code used a deduplication script by @terrymyc as inspiration.
 
 To be transparent, the latter deduplication round will also print the number of identified duplicates for both a the conservative strategy and a less conservative strategy. In this way, we can compare the impact of different duplication strategies.
 
@@ -134,11 +145,11 @@ The exact strategy of the second deduplication round is as follows:
 -  `deduplicate_doi.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
 -  `quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
 -  `deduplicate_for_q-check_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
-- `deduplicate_conservatively.R` - this script contains a function to deduplicate the records in a  conservative way based on title, author, year and journal/issn
+-  `deduplicate_conservative.R` - this script contains a function to deduplicate the records in a  conservative way based on title, author, year and journal/issn
 
 ## Results
-The result of the `master_script_merging_after_asreview.R` is
-`output/megemeta_merged_after_screening_asreview.xslx`. In this dataset the following
+The result of the `master_script_quality_check.R` is
+`output/megameta_asreview_quality_checked.xslx`. In this dataset the following
 columns have been added:
 
 - `index` (1-165045):
