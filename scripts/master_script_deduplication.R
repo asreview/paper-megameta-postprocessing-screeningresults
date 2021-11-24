@@ -43,23 +43,26 @@ DOI_RETRIEVED_PATH <- paste0(YOUR_FILE, "_doi_retrieved.xlsx")
 df <- read_xlsx(paste0(OUTPUT_PATH, DOI_RETRIEVED_PATH))
 
 ################# FOR MEGAMETA ONLY ######################
-############# COMMENT THE TWO COMMANDS BELOW #############
-############# IF NOT USING THE MEGAMETA DATA #############
+### COMMENT (ADD # BEFORE A LINE) THE THREE COMMANDS BELOW 
+### IF NOT USING THE MEGAMETA DATA 
 
 ## With the import, some columns were saved as logical, 
 ## instead of numeric. The important columns to change are:
-cols_to_num <- c("depression_included", 
+
+cols_to_num <- c("depression_included",
                      "anxiety_included",
                      "substance_included",
                      "composite_label")
 
 ## Change these columns to integers:
 df[, cols_to_num] <-
-  apply(df[, cols_to_num], 2, 
+  apply(df[, cols_to_num], 2,
         function(x)
           as.numeric(as.character(x)))
 
-############################################################
+##########################################################
+############ END MEGAMETA SPECIFIC PART ##################
+
 
 ##### DATA DEDUPLICATION ######
 
@@ -79,8 +82,31 @@ df <- identify_duplicates(df)
 ## -  A 0 should overwrite an NA.
 ## -  Only NA in a column (meaning that a record was not present in one of 
 ##    the subjects) should stay NA!
-df <- deduplicate_doi(df)
-df <- deduplicate_conservative(df)
+
+## If NOT using the megameta dataset, make sure to set megameta to FALSE instead
+## of TRUE
+
+df <- deduplicate_doi(df = df, megameta = TRUE) 
+
+## As input for the function below, please provide the columns which:
+## - would perform less conservative deduplication
+## - would be added to the less conservative deduplication, to perform 
+##   the conservative strategy.
+
+## In the case of megameta = TRUE, 
+## Conservative deduplication is automatically based on:
+## title, authors, year AND issn/secondary_title.
+
+df <- deduplicate_conservative(
+  df,
+  # less_conservative_cols = c([multiple variables here]),
+  # conservative_col = [one extra variable here],
+  megameta = TRUE
+)
+
+################# FOR MEGAMETA ONLY ######################
+### COMMENT (ADD # BEFORE A LINE) THE COMMANDS BELOW OR
+### SKIP COMMANDS IF NOT USING THE MEGAMETA DATA.
 
 ## Double check numbers:
 sum(df$depression_included, na.rm = T)
@@ -88,6 +114,8 @@ sum(df$substance_included, na.rm = T)
 sum(df$anxiety_included, na.rm = T)
 sum(df$composite_label, na.rm = T)
 
+##########################################################
+############ END MEGAMETA SPECIFIC PART ##################
 
 #### EXPORT ####
 
@@ -99,9 +127,18 @@ df <- arrange(df, index)
 ## The order of the columns does not yet allow for easy interpretation.
 ## Therefore, the columns should be shuffled, which is done next
 
+# IF NOT USING MEGAMETA PUT # BEFORE:
+#, <- this one is important! It is the comma after included!
+#depression_included,
+#anxiety_included,
+#substance_included,
+#composite_label
+
 df <-
   df %>% relocate(
     c(
+      index,
+      included,
       depression_included,
       anxiety_included,
       substance_included,
@@ -109,10 +146,6 @@ df <-
     ),
     .after = last_col()
   )
-
-# ADD DATA-EXTRACTED COLUMN
-# However below the column is created as a mockup
-df <- df %>% mutate(data_extracted = NA)
 
 # EXPORT
 write_xlsx(df, path = paste0(OUTPUT_PATH, YOUR_FILE, "_deduplicated.xlsx"))

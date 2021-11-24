@@ -1,5 +1,8 @@
 identify_duplicates <- function(df){
   
+  # Add an index
+  df$index <- 1:nrow(df)
+  
   # Split the data into a dataset with and without missing dois
   df_doi <- df %>%
     filter(!is.na(doi))
