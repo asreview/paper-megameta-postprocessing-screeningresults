@@ -76,15 +76,20 @@ When quality check 2 is finished, the names will be changed to those mentioned
 above.
 ```
 
-## Installation
+## Requirements to get started
 
 To get started:
 1. Open the `pre-processing.Rproject` in Rstudio;
 2. Open `scripts/master_script_merging_after_asreview.R`;
 3. Install, if necessary, the packages required by uncommenting the lines and running them.
+4. Make sure that at least the following columns are present in the data:
+    - `title`
+    - `abstract`
+    - `included`
+    - `year` (may be spelled differently as this can be changed within `crossref_doi_retrieval.ipynb`)
+
 
 ## Running the complete pipeline
-
 1. Open the `pre-processing.Rproject` in Rstudio and run the `master_script_merging_after_asreview.R` to merge the datasets.
 At the end of the merging script, a file named  
 `megameta_merged_merged.xlsx` is created
@@ -104,7 +109,7 @@ This script uses the deduplicated dataset as input and performs 2 quality checks
     1. Change the labels of incorrectly excluded records to included.
     2. Change the labels of incorrectly included records to excluded.
 They result in corrected columns for both the subjects and the composite_label.
-    
+
 
 ## Deduplication strategy
 
