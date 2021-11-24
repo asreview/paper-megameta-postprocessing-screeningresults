@@ -93,7 +93,7 @@ df <- deduplicate_doi(df = df, megameta = TRUE)
 ## - would be added to the less conservative deduplication, to perform 
 ##   the conservative strategy.
 
-## In the case of megameta = TRUE, 
+## In the case of megameta = TRUE, the following can be run as is.
 ## Conservative deduplication is automatically based on:
 ## title, authors, year AND issn/secondary_title.
 
@@ -133,12 +133,13 @@ df <- arrange(df, index)
 #anxiety_included,
 #substance_included,
 #composite_label
+# REMOVE # BEFORE INCLUDED
 
 df <-
   df %>% relocate(
     c(
       index,
-      included,
+      #included,
       depression_included,
       anxiety_included,
       substance_included,

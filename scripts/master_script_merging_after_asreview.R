@@ -73,10 +73,6 @@ df <- composite_label(df)
 # DO NOT REMOVE COMMANDS BELOW!
 #########################################################
 
-# SORTING
-## Make sure that the data is sorted as it was before
-df <- arrange(df, index)
-
 # ORDER OF COLUMNS
 ## The order of the columns does not yet allow for easy interpretation.
 ## Therefore, the columns should be shuffled, which is done next

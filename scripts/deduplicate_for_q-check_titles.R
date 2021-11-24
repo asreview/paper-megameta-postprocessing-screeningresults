@@ -85,7 +85,7 @@ deduplicate_q_check <- function(df, error_set){
       dup_set[which(dup_set$index == keep_index), cols_merge_final] <-
         dup_set %>%
         select(all_of(cols_merge_final), title) %>%
-        summarise(across(cols_merge_final, sum, na.rm = T)) %>%
+        summarise(across(all_of(cols_merge_final), sum, na.rm = T)) %>%
         select(!title)
       
       # Precaution for all labels:
@@ -94,7 +94,7 @@ deduplicate_q_check <- function(df, error_set){
       # Should be NA when all cols are NA
       dup_set[which(dup_set$index == keep_index), cols_merge] <-
         dup_set[which(dup_set$index == keep_index),] %>%
-        select(cols_merge) %>%
+        select(all_of(cols_merge)) %>%
         mutate(
           depression_included = case_when(depression_included > 1 ~ 1,
                                           TRUE ~ depression_included),
