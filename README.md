@@ -6,9 +6,17 @@ protocol has been pre-registered at
 [Prospero](https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42021266297).
 The procedure for obtaining the search terms, the exact search query, and
 selecting key papers by expert consensus can be found on the [Open Science
-Framework](https://osf.io/m5uhy/). The three datasets, one for each disorder,
-used for screening in ASReview and the partly labeled output datasets can be
-found on DANS[NEEDS LINK].  
+Framework](https://osf.io/m5uhy/). 
+
+The screening was conducted in the software ASReview ([Van de Schoot et al.,
+2020](https://www.nature.com/articles/s42256-020-00287-7) using the protocol
+as described in [Hofstee et al. (2021)](https://osf.io/3znar/). The server
+installation is described in [Melnikov
+(2021)](https://github.com/valmelnikov/asreview_server_setup), training of the
+hyperparameters for the CNN-model is described by [Tijema et al
+(2021)](https://github.com/asreview/paper-megameta-hyperparameter-training),
+and the post-processing is described by [van de Brand et al., 2021][6]. The
+data can be found on DANS [LINK NEEDED].
 
 The current repository contains the post-processing scripts to:
 
