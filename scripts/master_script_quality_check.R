@@ -1,61 +1,49 @@
-#####################################
-####### POST-PROCESSING PART 3 ######
-#####################################
+################################################
+####### QUALITY CHECK AFTER DEDUPLICATION ######
+################################################
 
 ################################################################################
 # This script creates from the input files (see below) the following output:   #
-# - megameta_merged_after_screening_asreview_part_3.xslx                       #
+# - [your_file]_quality_checked.xslx                                           #
 ################################################################################
 
-# install.packages
+# INSTALL PACKAGES
 ## If necessary use the commands below to install the necessary packages
 # install.packages("readxl")
 # install.packages("writexl")
 # install.packages("tidyverse")
 # install.packages("janitor")
 
-# Loading Libraries
+# LOADING LIBRARIES
 library(readxl)    # reading the data
 library(writexl)   # writing the data
 library(tidyverse) # Data wrangling
 library(janitor)   # Deduplication
 
-# Loading functions
-source("scripts/identify_duplicates.R") # Identifies duplicates
-source("scripts/deduplicate_doi.R") # Deduplication and merging rows based on doi
+# LOADING NECESSARY FUNCTIONS
 source("scripts/deduplicate_for_q-check_titles.R") # Deduplication and merging based on titles for the quality checks
-source("scripts/deduplicate_conservative.R") # an extra round of conservative deduplication
 source("scripts/quality_check.R") # Adding columns with corrected values.
 
-# Creating Directories
+# CREATING DIRECTORIES
 ## Output
 dir.create("output")
 
-# Defining Paths
+# DEFINING PATHS
+## If necessary, change the name to your file name:
+YOUR_FILE <- "megameta_asreview"
+
+## Keep as is
 DATA_PATH <- "data/"
-PART_2_PATH <- "megameta_asreview_added_doi_part_2.xlsx"
+OUTPUT_PATH <- "output/"
+DEDUPLICATED_PATH <- paste0(YOUR_FILE, "_deduplicated.xlsx")
 QUALITY_CHECK_1_PATH <- "-incorrectly-excluded-records.xlsx"
 # TO BE CHANGED WHEN FINAL DATASET IS AVAILABLE:
 QUALITY_CHECK_2_PATH <- "-incorrectly-included-records-preliminary-results.xlsx"
-OUTPUT_PATH <- "output/"
 
-# Importing results from post-processing part 2
-df <- read_xlsx(paste0(OUTPUT_PATH, PART_2_PATH))
+# IMPORT DEDUPLICATED DATA
+df <- read_xlsx(paste0(OUTPUT_PATH, DEDUPLICATED_PATH))
 
-## With the import, some columns were saved as log, instead of numeric.
-## The important columns to change are:
-cols_to_num <- c("depression_included", 
-                     "anxiety_included",
-                     "substance_included",
-                     "composite_label")
-
-## Change these columns to integers:
-df[, cols_to_num] <-
-  apply(df[, cols_to_num], 2, 
-        function(x)
-          as.numeric(as.character(x)))
-
-# Importing Quality check Data
+# IMPORT QUALITY CHECK DATA
 ## In short Quality check 1 checks which records have been falsely excluded.
 ## Quality check 2 checks which records have been falsely included.
 ## More information in the `quality_check.R` script. 
@@ -65,41 +53,12 @@ depression_q1 <- read_xlsx(paste0(DATA_PATH, "depression", QUALITY_CHECK_1_PATH)
 substance_q1 <- read_xlsx(paste0(DATA_PATH, "substance_abuse", QUALITY_CHECK_1_PATH))
 anxiety_q1 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_1_PATH))
 
-
-### MISSING DATAFILES ###
-# # Quality check 2 Data
+## Quality check 2 Data
 depression_q2 <- read_xlsx(paste0(DATA_PATH, "depression", QUALITY_CHECK_2_PATH))
 substance_q2 <- read_xlsx(paste0(DATA_PATH, "substance", QUALITY_CHECK_2_PATH))
 anxiety_q2 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_2_PATH))
 
-##### Data deduplication ######
-
-# IDENTIFY DUPLICATES
-## The duplicates need to be identified and deduplicated
-## This function adds two extra columns: 
-## - index: Simply an index to be able to rearrange the order, while still
-##          preserving the knowledge of the order in which the records were
-##          screened
-## - unique_record: Where 1 indicates an unique record and 0 a duplicated one.
-df <- identify_duplicates(df)
-
-# DEDUPLICATION
-## Before the actual deduplication commences the 
-## Merging the values of duplicated rows is based on the following:
-## -  A 1 in any of the columns should overwrite an NA or 0 of other rows.
-## -  A 0 should overwrite an NA.
-## -  Only NA in a column (meaning that a record was not present in one of 
-##    the subjects) should stay NA!
-df <- deduplicate_doi(df)
-df <- deduplicate_conservative(df)
-
-## Double check numbers:
-sum(df$depression_included, na.rm = T)
-sum(df$substance_included, na.rm = T)
-sum(df$anxiety_included, na.rm = T)
-sum(df$composite_label, na.rm = T)
-
-# QUALITY CHECKS
+# QUALITY CHECK
 # This function adds multiple columns:
 # 1. "quality_check_1(0->1)": 
 #    Indicating for which subject a record was wrongly excluded:
@@ -128,6 +87,15 @@ sum(df$composite_label, na.rm = T)
 
 df <- quality_check(df)
 
+## Check how many values were changed
+
+# Quality check 1:
+print(paste("The number of changed labels through quality check 1 is",
+length(which(!is.na(df$`quality_check_1(0->1)`)))))
+
+# Quality check 2:
+print(paste("The number of changed labels through quality check 2 is",
+length(which(!is.na(df$`quality_check_2(1->0)`)))))
 
 #### Preparation for exportation ####
 
@@ -161,5 +129,4 @@ df <-
 df <- df %>% mutate(data_extracted = NA)
 
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "megameta_merged_after_screening_asreview_part_3.xlsx"))
-
+write_xlsx(df, path = paste0(OUTPUT_PATH, YOUR_FILE, "_quality_checked.xlsx"))

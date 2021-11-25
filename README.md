@@ -8,13 +8,14 @@ The procedure for obtaining the search terms, the exact search query, and
 selecting key papers by expert consensus can be found on the [Open Science
 Framework](https://osf.io/m5uhy/). The three datasets, one for each disorder,
 used for screening in ASReview and the partly labeled output datasets can be
-found on DANS[NEEDS LINK].  The current repository contains the
-post-processing scripts to:
+found on DANS[NEEDS LINK].  
+
+The current repository contains the post-processing scripts to:
 
 1.	Merge the three output files after screening in
 ASReview;
 2.	Obtain missing DOIs;
-3.	Apply another round of de-duplication ([the first round](https://github.com/asreview/paper-megameta-preprocessing-searchresults) of de-duplication was applied before the screening started).
+3.	Apply another round of de-duplication ([the first round](https://osf.io/m5uhy/) of de-duplication was applied before the screening started).
 4. Deal with noisy labels corrected in two rounds of quality checks;
 
 The scripts in the current repository result in one single dataset that can be
@@ -29,44 +30,53 @@ The `/data` folder contains test-files which can be used to test the pipeline.
 
 ```
 NOTE: When you want to use these test files; please make sure that the empirical
-data is not saved solely in the same data folder as where these test files are stored!
-The next step will overwrite these files.
+data is not saved in the `/data` folder because the next step will overwrite these files.
 ```
 
 1. Open the `pre-processing.Rproject` in Rstudio;
 2. Open `scrips/change_test_file_names.R` and run the script. The test files
-will now have the same file names as those of the empirical data. See [datasets](#Datasets)
-for the specific names.
+will now have the same file names as those of the empirical data.
 3. Continue with **Running the complete pipeline**.
 
+#### Results of the test data
+To check whether the pipeline worked correctly on the test data, check the following
+values in the output:
+
+- Within the `crossref_doi_retrieval.ipynb` script 33/38 doi's should be retrieved.
+- After deduplication in `master_script_deduplication.R` the total number of relevant papers
+(sum of the values in the composite_label column) should be 20.
+- After running the quality_check function in  `master_script_quality_check.R` the number of changed labels
+should be:
+  - Quality check 1: 6
+  - Quality check 2: 6
 
 ### Empirical Data
 
 The empricial data is available on DANS[NEEDS LINK]. Request access, donwload the files,
-and add the required data into the data folder.
+and add the required data into the `/data` folder.
 
 ### Data Files Names
 
-The following datasets should be available in `/data`:
+The following nine datasets should be available in `/data`:
 
-1. The three export-datasets with the partly labelled data after screening in
+The three export-datasets with the partly labelled data after screening in
 ASReview:  
   - `anxiety-screening-CNN-output.xlsx`
   - `depression-screening-CNN-output.xslx`
   - `substance-screening-CNN-output.xslx`
 
-2. The three datasets resulting from Quality Check 1:
+The three datasets resulting from Quality Check 1:
  - `anxiety-incorrectly-excluded-records.xlsx`
  - `depression-incorrectly-excluded-records.xlsx`
  - `substance-incorrectly-excluded-records.xlsx`
 
-3. The three datasets resulting from Quality Check 2:
+The three datasets resulting from Quality Check 2:
  - `anxiety-incorrectly-included-records`
  - `depression-incorrectly-included-records`
  - `substance-incorrectly-included-records`
 
 ```
-NOTE: For 3. it should be noted that these files are not finished yet. Therefore
+NOTE: The last three are not finished yet. Therefore
 the files currently have the following temporary names:
   - anxiety-incorrectly-included-records-preliminary-results.xslx
   - depression-incorrectly-included-records-preliminary-results.xslx
@@ -76,41 +86,51 @@ When quality check 2 is finished, the names will be changed to those mentioned
 above.
 ```
 
-## Installation
+## Requirements to get started
 
 To get started:
 1. Open the `pre-processing.Rproject` in Rstudio;
-2. Open `scripts/master_script_merging_after_asreview_part_1.R`;
+2. Open `scripts/master_script_merging_after_asreview.R`;
 3. Install, if necessary, the packages required by uncommenting the lines and running them.
+4. Make sure that at least the following columns are present in the data:
+    - `title`
+    - `abstract`
+    - `included`
+    - `year` (may be spelled differently as this can be changed within `crossref_doi_retrieval.ipynb`)
+
 
 ## Running the complete pipeline
 
-1. Open the `pre-processing.Rproject` in Rstudio and run the `script master_script_merging_after_asreview_part_1.R` to merge the datasets.
-At the end of part_1, a file named  
-`megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is created
-and saved in `/output`.
-2. Next, run the `scripts/crossref_doi_retrieval_part_2.ipynb` in jupyter notebook
-to retrieve the missing doi's. The input for this script `megameta_merged_after_screening_asreview_part_1_preliminary.xlsx` is automated.
-The output from the doi retrieval is also stored in the output folder:
-`megameta_asreview_added_doi_part_2_preliminary.xlsx`
-Note. This might take some time!
-3. For the final part, open and run `scripts/master_script_merging_after_asreview_part_3.R`
-back in the Rproject in Rstudio.
-Again the input data (`megameta_asreview_added_doi_part_2_preliminary.xlsx`) is
-automatically retrieved.
-This will finally result in the final dataset stored in the output folder: `megameta_merged_after_screening_asreview_postprocessed_preliminary.xslx`
+1. Open the `pre-processing.Rproject` in Rstudio and run the `master_script_merging_after_asreview.R` to merge the datasets.
+At the end of the merging script, the file `megameta_merged_merged.xlsx` is created and saved in `/output`.
+2. Run the `scripts/crossref_doi_retrieval.ipynb` in jupyter notebook to retrieve the missing doi's.
+The output from the doi retrieval is stored in `/output`:
+`megameta_asreview_doi_retrieved.xlsx`. Note: This step might take some time!
+3. For the deduplication part, open and run `scripts/master_script_deduplication.R`
+back in the Rproject in Rstudio. This result is stored in `/output`: `megameta_asreview_deduplicated.xslx`
+4. To correct labels based on two quality checks, run `master_script_quality_check.R`.
+This script uses the deduplicated dataset as input and performs 2 quality checks:
+    1. Change the labels of incorrectly excluded records to included.
+    2. Change the labels of incorrectly included records to excluded.
+It results in corrected columns for both the subject- and the composite-label.
+
 
 ## Deduplication strategy
 
-Keeping in mind that deduplication is never perfect, this script contains a function
-to deduplicate the records in a very conservative way. It is assumed that it is better
-to miss duplicates within the data, than to falsely deduplicate records.
+Keeping in mind that deduplication is never perfect,
+`scripts/master_script_deduplication.R` contains a function to deduplicate the
+records in a very conservative way. It is assumed that it is better to miss
+duplicates within the data, than to falsely deduplicate records.
 
-Therefore deduplication within the `master_script_merging_after_asreview_part_3.R`
-is based on two different rounds of deduplication. The first round uses doi to identify duplicates.
-However, extra deduplication is necessary because deduplication only based on doi is not sufficient. Many doi's, even after crossref doi retrieval, are still missing. Or in some cases the doi's may be different for otherwise seemingly identical records. Therefore, an extra conservative round of deduplication is also applied to the data.
+Therefore deduplication within the `master_script_deduplication.R` is based on
+two different rounds of deduplication. The first round uses the digitial
+object identifier (doi) to identify duplicates. However, many doi's, even
+after doi-retrieval, are still missing. Or in some cases the doi's may be
+different for otherwise seemingly identical records. Therefore, an extra round
+of deduplication is applied to the data. This conservative strategy was
+devised with the help of @bmkramer. The code used a deduplication script by
+@terrymyc as inspiration.
 
-To be transparent, the latter deduplication round will also print the number of identified duplicates for both a the conservative strategy and a less conservative strategy. In this way, we can compare the impact of different duplication strategies.
 
 The exact strategy of the second deduplication round is as follows:
 1. Set all necessary columns (see below) for deduplication to lowercase characters and remove any punctuation marks.
@@ -125,8 +145,14 @@ The exact strategy of the second deduplication round is as follows:
   - Year
 4. Deduplicate using the strategy from 2.
 
+The deduplication script will also print the number of identified duplicates
+for both the conservative strategy and a less conservative strategy based on
+only authors, title, and year. In this way, we can compare the impact of
+different duplication strategies.
+
 
 ## Post-processing functions
+
 -  `change_test_file_names.R` - With this script the filenames of the test files are converted to the empirical datafile names.
 -  `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
 -  `composite_label.R` - This script contains a function to create a column with the final inclusions.
@@ -134,11 +160,12 @@ The exact strategy of the second deduplication round is as follows:
 -  `deduplicate_doi.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
 -  `quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
 -  `deduplicate_for_q-check_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
-- `deduplicate_conservatively.R` - this script contains a function to deduplicate the records in a  conservative way based on title, author, year and journal/issn
+-  `deduplicate_conservative.R` - this script contains a function to deduplicate the records in a  conservative way based on title, author, year and journal/issn
 
-## Results
-The result of the `master_script_merging_after_asreview.R` is
-`output/megemeta_merged_after_screening_asreview.xslx`. In this dataset the following
+## Result
+
+The result of running all scripts in this repository is the file
+`output/megameta_asreview_quality_checked.xslx`. In this dataset the following
 columns have been added:
 
 - `index` (1-165045):

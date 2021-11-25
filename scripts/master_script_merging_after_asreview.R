@@ -1,44 +1,49 @@
-#####################################
-####### POST-PROCESSING PART 1 ######
-#####################################
+###########################################################
+####### MERGING DATASETS AFTER SCREENING IN ASREVIEW ######
+###########################################################
 
 ################################################################################
 # This script creates from the input files (see below) the following output:   #
-# - megameta_merged_after_screening_asreview_part_1.xlsx                       #
+# - [your_file]_merged.xslx                                                    #
 ################################################################################
 
-# install.packages
+# INSTALL PACKAGES
 ## If necessary use the commands below to install the necessary packages
 # install.packages("readxl")
 # install.packages("writexl")
 # install.packages("tidyverse")
 # install.packages("janitor")
 
-# Loading Libraries
+# LOAD LIBRARIES
 library(readxl)    # reading the data
 library(writexl)   # writing the data
 library(tidyverse) # Data wrangling
 library(janitor)   # Deduplication
 
-# Loading functions
+# LOAD FUNCTIONS
 source("scripts/merge_datasets.R") # Merges all three input datasets
 source("scripts/composite_label.R") # Adds a column indicating final_inclusions
 
-# Creating Directories
+# CREATE DIRECTORIES
 ## Output
 dir.create("output")
 
-# Defining Paths
-DATA_PATH <- "data/"
+# DEFINE PATHS
+## If necessary, change the name to your file name:
+YOUR_FILE <- "megameta_asreview"
 RESULTS_DATA_PATH <- "-screening-CNN-output.xlsx"
+
+## Keep as is
+DATA_PATH <- "data/"
 OUTPUT_PATH <- "output/"
 
+## If necessary, change below to your specific path(s):
 # Importing Results Data
 depression <- read_xlsx(paste0(DATA_PATH, "depression", RESULTS_DATA_PATH))
 substance <- read_xlsx(paste0(DATA_PATH, "substance", RESULTS_DATA_PATH))
 anxiety <- read_xlsx(paste0(DATA_PATH, "anxiety", RESULTS_DATA_PATH))
 
-##### Data wrangling ######
+##### DATA WRANGLING ######
 
 # MERGING
 ## First the datasets need to be merged
@@ -49,11 +54,11 @@ df <- merge_datasets(depression, substance, anxiety)
 ## Composite_label simply indicates whether the record was included.
 df <- composite_label(df)
 
-#### Preparation for exportation for part 2 ####
+#### PREPARE FOR EXPORT TO DOI RETRIEVAL ####
 
 ############# BEGIN OF EXTRA TEST COMMANDS ##############
 
-# # PART 2 (ONLY FOR TESTING!!!):
+# # (ONLY FOR TESTING!!!):
 # ## For the next part of the post-processing, 
 # ## doi's will be retrieved for the missing doi's.
 # 
@@ -64,13 +69,9 @@ df <- composite_label(df)
 # df <- df %>% filter(composite_label == 1)
 
 ############## END OF EXTRA TEST COMMANDS ###############
-# THE COMMANDS BELOW ARE AGAIN FOR ANY SCRIPT:TESTING OR FINAL
+# THE COMMANDS BELOW ARE AGAIN FOR ANY SCRIPT: TESTING OR FINAL
 # DO NOT REMOVE COMMANDS BELOW!
 #########################################################
-
-# SORTING
-## Make sure that the data is sorted as it was before
-df <- arrange(df, index)
 
 # ORDER OF COLUMNS
 ## The order of the columns does not yet allow for easy interpretation.
@@ -102,7 +103,6 @@ df <- df %>%
     )
   )
 
-
 # EXPORT
-write_xlsx(df, path = paste0(OUTPUT_PATH, "megameta_merged_after_screening_asreview_part_1.xlsx"))
+write_xlsx(df, path = paste0(OUTPUT_PATH, YOUR_FILE, "_merged.xlsx"))
 
