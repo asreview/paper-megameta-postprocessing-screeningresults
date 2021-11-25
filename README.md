@@ -193,4 +193,4 @@ This project is funded by a grant from the Centre for Urban Mental Health, Unive
 The content in this repository is published under the MIT license.
 
 ## Contact
-For any questions or remarks, please send an email to [ADD EMAIL].
+For any questions or remarks, please send an email to the [ASReview-team](mailto:asreview@uu.nl) or [Marlies Brouwer](https://orcid.org/0000-0002-9972-9058).
