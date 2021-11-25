@@ -75,17 +75,6 @@ The three datasets resulting from Quality Check 2:
  - `depression-incorrectly-included-records`
  - `substance-incorrectly-included-records`
 
-```
-NOTE: The last three are not finished yet. Therefore
-the files currently have the following temporary names:
-  - anxiety-incorrectly-included-records-preliminary-results.xslx
-  - depression-incorrectly-included-records-preliminary-results.xslx
-  - substance-incorrectly-included-records-preliminary-results.xslx
-
-When quality check 2 is finished, the names will be changed to those mentioned
-above.
-```
-
 ## Requirements to get started
 
 To get started:
