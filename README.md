@@ -12,10 +12,9 @@ The screening was conducted in the software ASReview ([Van de Schoot et al.,
 2020](https://www.nature.com/articles/s42256-020-00287-7) using the protocol
 as described in [Hofstee et al. (2021)](https://osf.io/3znar/). The server
 installation is described in [Melnikov
-(2021)](https://github.com/valmelnikov/asreview_server_setup), training of the
+(2021)](https://github.com/valmelnikov/asreview_server_setup), and training of the
 hyperparameters for the CNN-model is described by [Tijema et al
-(2021)](https://github.com/asreview/paper-megameta-hyperparameter-training),
-and the post-processing is described by [van de Brand et al., 2021][6]. The
+(2021)](https://github.com/asreview/paper-megameta-hyperparameter-training). The
 data can be found on DANS [LINK NEEDED].
 
 The current repository contains the post-processing scripts to:
