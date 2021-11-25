@@ -35,9 +35,20 @@ data is not saved in the `/data` folder because the next step will overwrite the
 
 1. Open the `pre-processing.Rproject` in Rstudio;
 2. Open `scrips/change_test_file_names.R` and run the script. The test files
-will now have the same file names as those of the empirical data. 
+will now have the same file names as those of the empirical data.
 3. Continue with **Running the complete pipeline**.
 
+#### Results of the test data
+To check whether the pipeline worked correctly on the test data, check the following
+values in the output:
+
+- Within the `crossref_doi_retrieval.ipynb` script 33/38 doi's should be retrieved.
+- After deduplication in `master_script_deduplication.R` the total number of relevant papers
+(sum of the values in the composite_label column) should be 20.
+- After running the quality_check function in  `master_script_quality_check.R` the number of changed labels
+should be:
+  - Quality check 1: 6
+  - Quality check 2: 6
 
 ### Empirical Data
 
@@ -92,7 +103,7 @@ To get started:
 
 1. Open the `pre-processing.Rproject` in Rstudio and run the `master_script_merging_after_asreview.R` to merge the datasets.
 At the end of the merging script, the file `megameta_merged_merged.xlsx` is created and saved in `/output`.
-2. Run the `scripts/crossref_doi_retrieval.ipynb` in jupyter notebook to retrieve the missing doi's. 
+2. Run the `scripts/crossref_doi_retrieval.ipynb` in jupyter notebook to retrieve the missing doi's.
 The output from the doi retrieval is stored in `/output`:
 `megameta_asreview_doi_retrieved.xlsx`. Note: This step might take some time!
 3. For the deduplication part, open and run `scripts/master_script_deduplication.R`

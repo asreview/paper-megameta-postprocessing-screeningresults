@@ -87,6 +87,16 @@ anxiety_q2 <- read_xlsx(paste0(DATA_PATH, "anxiety", QUALITY_CHECK_2_PATH))
 
 df <- quality_check(df)
 
+## Check how many values were changed
+
+# Quality check 1:
+print(paste("The number of changed labels through quality check 1 is",
+length(which(!is.na(df$`quality_check_1(0->1)`)))))
+
+# Quality check 2:
+print(paste("The number of changed labels through quality check 2 is",
+length(which(!is.na(df$`quality_check_2(1->0)`)))))
+
 #### Preparation for exportation ####
 
 # SORTING
