@@ -43,10 +43,6 @@
 		{
 			"relation": "isPartOf",
 		 	"identifier": "https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42021266297"
-		},
-		{
-			"relation": "requires",
-		 	"identifier": "DANS"
 		}
 	],
 	"license": "MIT",
