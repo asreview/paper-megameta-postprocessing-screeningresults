@@ -135,14 +135,15 @@ It is possible to improve the speed of the doi retrieval by using the following 
    chunk might be smaller than the others.
 2. For each chunk, create a copy of the `chunk_0.py` file, and place it in the
    `split` folder. Change the name `chunk_0.py` to `chunk_1.py`, `chunk_2.py`,
-   etc, for each created chunk. Within each file, change `script_number` = "0"
-   to `script_number` = "1", `script_number` = "2", etc.
-3. Run each `chunk_*.py` file in the `split` folder simultaneously from a
+   etc, for each created chunk. 
+3. Within each file, change `script_number` = "0" to `script_number` = "1", 
+   `script_number` = "2", etc.
+4. Run each `chunk_*.py` file in the `split` folder simultaneously from a
    separate console. The script stores the console output to a respective
    `result_chunk_*.txt` file.
-4. Use the second half of `split_and_merge_input_file.ipynb` to merge the
+5. Use the second half of `split_and_merge_input_file.ipynb` to merge the
    results of the `chunk_*.py` scripts.
-5. The resulting file will be stored in the same way as the
+6. The resulting file will be stored in the same way as the
    `crossref_doi_retrieval.ipynb` would.
 
 The split folder should look like this after each chunk has been run:
