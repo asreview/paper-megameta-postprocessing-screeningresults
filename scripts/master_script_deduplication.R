@@ -101,13 +101,13 @@ df <- deduplicate_doi(df = df, megameta = TRUE)
 ##    for a *less conservative strategy*;                                     #
 ##                                                                            #
 ##    for example:                                                            #
-##    less_conservative_cols = c("title", "authors", "year")                  #
+##    less_conservative_cols = c("title", "author", "year")                   #
 ##                                                                            #
 ## 3. Fill in the name of a variable that would be added to the above for the #
 ##    *conservative deduplication strategy*;                                  #
 ##                                                                            #
 ##    for example:                                                            #
-##    conservative_col = c("journal")                                         #
+##    conservative_col = c("abstract")                                        #
 ###############################################################################
 
 ## In the case of megameta = TRUE, the following can be run as is.
