@@ -143,7 +143,7 @@ It is possible to improve the speed of the doi retrieval by using the following 
    `crossref_doi_retrieval.ipynb` would.
 
 The split folder should look like this:
-![Split folder](split_example.png)
+![Split folder](img/split_example.png)
 
 
 ## Deduplication strategy
