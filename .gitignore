@@ -66,3 +66,6 @@ output/data_for_plugin/*.xlsx
 
 ### DO UPLOAD TEST DATA ###
 !data/TEST*.xlsx
+
+# split data
+split/*
