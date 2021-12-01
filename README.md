@@ -122,9 +122,7 @@ This script uses the deduplicated dataset as input and performs 2 quality checks
 It results in corrected columns for both the subject- and the composite-label.
 5. OPTIONAL: Create ASReview plugin-ready data by running the script `master_script_process_data_for_asreview_plugin.R`.
 This script creates a new folder in the output folder, `data_for_plugin`, containing several versions
-of the dataset created from step 4. The file `megameta_asreview_partly_labelled.xlsx` can be used as input for .... [????]. 
-
-
+of the dataset created from step 4. See [Data for the ASReview plugin](#data-for-the-asreview-plugin) for more information.
 
 ## Deduplication strategy
 
@@ -161,6 +159,21 @@ for both the conservative strategy and a less conservative strategy based on
 only authors, title, and year. In this way, we can compare the impact of
 different duplication strategies.
 
+## Data for the ASReview plugin.
+The script `master_script_process_data_for_asreview_plugin.R` creates a new folder in the output folder, `data_for_plugin`, containing several versions of the dataset created from [step 4](#running-the-complete-pipeline).
+
+1. `megameta_asreview_partly_labelled`:
+A dataset where a column called `label_included` is added, which is an exact copy of the composite_label_corrected.
+2. `megameta_asreview_only_potentially_relevant`:
+A dataset with only those records which have a 1 in composite_label_corrected
+3. `megameta_asreview_potentially_relevant_depression`:
+A dataset with only those records which have a 1 in depression_included_corrected
+4. `megameta_asreview_potentially_relevant_substance`:
+A dataset with only those records which have a 1 in substance_included_corrected
+5. `megameta_asreview_potentially_relevant_anxiety`:
+A dataset with only those records which have a 1 in anxiety_included_corrected
+
+[INSTRUCTIONS FOR PLUGIN?]
 
 ## Post-processing functions
 
