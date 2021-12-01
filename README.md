@@ -143,7 +143,7 @@ results of the `chunk_*.py` scripts.
 `crossref_doi_retrieval.ipynb` would.
 
 The split folder should look like this:
-
+![Split folder](split_example.png)
 
 
 ## Deduplication strategy
