@@ -62,6 +62,7 @@ scripts/.ipynb_checkpoints
 ### DO NOT UPLOAD THE DATA ###
 data/*.xlsx
 output/*.xlsx
+output/data_for_plugin/*.xlsx
 
 ### DO UPLOAD TEST DATA ###
 !data/TEST*.xlsx

@@ -25,7 +25,7 @@ source("scripts/identify_duplicates.R") # Identifies duplicates
 source("scripts/deduplicate_doi.R") # Deduplication and merging rows based on doi
 source("scripts/deduplicate_conservative.R") # an extra round of conservative deduplication
 
-# CREATUNG DIRECTORIES
+# CREATING DIRECTORIES
 ## Output
 dir.create("output")
 
@@ -75,7 +75,7 @@ df[, cols_to_num] <-
 ## - unique_record: Where 1 indicates an unique record and 0 a duplicated one.
 df <- identify_duplicates(df)
 
-# DEDUPLICATION
+#  DOI DEDUPLICATION
 ## Before the actual deduplication commences the 
 ## Merging the values of duplicated rows is based on the following:
 ## -  A 1 in any of the columns should overwrite an NA or 0 of other rows.
@@ -88,10 +88,27 @@ df <- identify_duplicates(df)
 
 df <- deduplicate_doi(df = df, megameta = TRUE) 
 
-## As input for the function below, please provide the columns which:
-## - would perform less conservative deduplication
-## - would be added to the less conservative deduplication, to perform 
-##   the conservative strategy.
+#  CONSERVATIVE DEDUPLICATION
+## The defaults for the conservative deduplication are set to the 
+## conservative deduplication strategy of the Megameta project. 
+
+###############################################################################
+## If you are using this script for another project,                          #
+## do the following in the command below:                                     #
+## 1. Change megameta = TRUE to megameta = FALSE                              #
+##                                                                            #
+## 2. Fill in the names of the variables you would like to deduplicate on     #
+##    for a *less conservative strategy*;                                     #
+##                                                                            #
+##    for example:                                                            #
+##    less_conservative_cols = c("title", "author", "year")                   #
+##                                                                            #
+## 3. Fill in the name of a variable that would be added to the above for the #
+##    *conservative deduplication strategy*;                                  #
+##                                                                            #
+##    for example:                                                            #
+##    conservative_col = c("abstract")                                        #
+###############################################################################
 
 ## In the case of megameta = TRUE, the following can be run as is.
 ## Conservative deduplication is automatically based on:
@@ -100,7 +117,7 @@ df <- deduplicate_doi(df = df, megameta = TRUE)
 df <- deduplicate_conservative(
   df,
   # less_conservative_cols = c([multiple variables here]),
-  # conservative_col = [one extra variable here],
+  # conservative_col = c([one extra variable here]),
   megameta = TRUE
 )
 
@@ -127,7 +144,7 @@ df <- arrange(df, index)
 ## The order of the columns does not yet allow for easy interpretation.
 ## Therefore, the columns should be shuffled, which is done next
 
-# IF NOT USING MEGAMETA PUT # BEFORE:
+# IF NOT USING MEGAMETA PUT A # BEFORE:
 #, <- this one is important! It is the comma after included!
 #depression_included,
 #anxiety_included,
