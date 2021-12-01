@@ -113,8 +113,8 @@ At the end of the merging script, the file `megameta_merged_merged.xlsx` is crea
 2. Run the `scripts/crossref_doi_retrieval.ipynb` in jupyter notebook to retrieve the missing doi's.
 The output from the doi retrieval is stored in `/output`:
    `megameta_asreview_doi_retrieved.xlsx`. Note: This step might take some time!
-   To decrease the time, you can run the script in a different notebook.
-   
+   To decrease the time, follow the steps in the [Improving DOI retrieval
+   speed](#Improving-DOI-retrieval-speed) section.
 3. For the deduplication part, open and run `scripts/master_script_deduplication.R`
 back in the Rproject in Rstudio. This result is stored in `/output`: `megameta_asreview_deduplicated.xslx`
 4. To correct labels based on two quality checks, run `master_script_quality_check.R`.
@@ -124,8 +124,8 @@ This script uses the deduplicated dataset as input and performs 2 quality checks
 It results in corrected columns for both the subject- and the composite-label.
 
 ## Improving DOI retrieval speed
-To speed up the retrieval, you can split the dataset into smaller chunks, run
-the script multiple times, and merge the results.
+To speed up the retrieval, split the dataset into smaller chunks, run
+the script multiple times, and merge the results using the followin steps.
 
 1. Split the dataset into smaller chunks by running the first halve of the 
 `split_and_merge_input_file.ipynb` script. Within this script is the option
