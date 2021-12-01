@@ -6,7 +6,7 @@ protocol has been pre-registered at
 [Prospero](https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42021266297).
 The procedure for obtaining the search terms, the exact search query, and
 selecting key papers by expert consensus can be found on the [Open Science
-Framework](https://osf.io/m5uhy/). 
+Framework](https://osf.io/m5uhy/).
 
 The screening was conducted in the software ASReview ([Van de Schoot et al.,
 2020](https://www.nature.com/articles/s42256-020-00287-7) using the protocol
@@ -120,6 +120,10 @@ This script uses the deduplicated dataset as input and performs 2 quality checks
     1. Change the labels of incorrectly excluded records to included.
     2. Change the labels of incorrectly included records to excluded.
 It results in corrected columns for both the subject- and the composite-label.
+5. OPTIONAL: Create ASReview plugin-ready data by running the script `master_script_process_data_for_asreview_plugin.R`.
+This script creates a new folder in the output folder, `data_for_plugin`, containing several versions
+of the dataset created from step 4. The file `megameta_asreview_partly_labelled.xlsx` can be used as input for .... [????]. 
+
 
 
 ## Deduplication strategy
@@ -171,7 +175,8 @@ different duplication strategies.
 
 ## Result
 
-The result of running all scripts in this repository is the file
+The result of running all master scripts up until [step 4](#running-the-complete-pipeline)
+in this repository is the file
 `output/megameta_asreview_quality_checked.xslx`. In this dataset the following
 columns have been added:
 
@@ -218,6 +223,8 @@ columns have been added:
 For all columns where there are only 0's 1's and NA's, a `0` indicates a negative
 (excluded for example), while `1` indicates a positive (included for example). `NA`
 means `Not Available`.
+
+
 
 
 ## Funding

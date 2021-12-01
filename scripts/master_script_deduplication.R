@@ -25,7 +25,7 @@ source("scripts/identify_duplicates.R") # Identifies duplicates
 source("scripts/deduplicate_doi.R") # Deduplication and merging rows based on doi
 source("scripts/deduplicate_conservative.R") # an extra round of conservative deduplication
 
-# CREATUNG DIRECTORIES
+# CREATING DIRECTORIES
 ## Output
 dir.create("output")
 
