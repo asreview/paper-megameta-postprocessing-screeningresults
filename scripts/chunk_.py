@@ -5,8 +5,10 @@ import string
 import urllib
 import datetime
 from pathlib import Path
+import sys
 
 script_number = "0"
+sys.stdout = open(f"result_chunk_{script_number}.txt", "w")
 
 input_file = Path("..", "split", f"chunk_{script_number}.csv")
 resultsDF = pd.read_csv(input_file)
@@ -87,3 +89,5 @@ doiFixedDF.loc[~doiFixedDF.doi.isna(), 'doi'] = doiFixedDF[~doiFixedDF.doi.isna(
 
 # Saving the fixed DOI file
 doiFixedDF.to_csv(Path("..", "split", f"chunk_doi_{script_number}.csv"), index=False)
+
+sys.stdout.close()
