@@ -142,7 +142,7 @@ It is possible to improve the speed of the doi retrieval by using the following 
 5. The resulting file will be stored in the same way as the
    `crossref_doi_retrieval.ipynb` would.
 
-The split folder should look like this:
+The split folder should look like this after each chunk has been run:
 ![Split folder](img/split_example.png)
 
 
