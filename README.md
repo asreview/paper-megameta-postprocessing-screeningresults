@@ -113,7 +113,7 @@ At the end of the merging script, the file `megameta_merged_merged.xlsx` is crea
 2. Run the `scripts/crossref_doi_retrieval.ipynb` in jupyter notebook to retrieve the missing doi's.
 The output from the doi retrieval is stored in `/output`:
    `megameta_asreview_doi_retrieved.xlsx`. Note: This step might take some time!
-   To decrease the time, follow the steps in the [Improving DOI retrieval
+   To significantly decrease run time, follow the steps in the [Improving DOI retrieval
    speed](#Improving-DOI-retrieval-speed) section.
 3. For the deduplication part, open and run `scripts/master_script_deduplication.R`
 back in the Rproject in Rstudio. This result is stored in `/output`: `megameta_asreview_deduplicated.xslx`
@@ -123,24 +123,24 @@ This script uses the deduplicated dataset as input and performs 2 quality checks
     2. Change the labels of incorrectly included records to excluded.
 It results in corrected columns for both the subject- and the composite-label.
 
-## Improving DOI retrieval speed
-To speed up the retrieval, split the dataset into smaller chunks, run
-the script multiple times, and merge the results using the followin steps.
+### Improving DOI retrieval speed
+It is possible to improve the speed of the doi retrieval by using the following steps:
 
-1. Split the dataset into smaller chunks by running the first halve of the 
-`split_and_merge_input_file.ipynb` script. Within this script is the option
-to set the amount of chunks. If the records aren't split evenly, the last
-chunk might be smaller than the others.
-2. For each chunk, create a copy of the `chunk_0.py` file, and place it in
-the `split` folder. Change the name `chunk_0.py` to `chunk_1.py`,
-`chunk_2.py`, etc, for each created chunk. Within each file, change
-`script_number` = "0" to `script_number` = "1", `script_number` = "2", etc.
-3. Run each `chunk_*.py` file in the `split` folder simultaneously. The
-script stores the console output to a respective `result_chunk_*.txt` file.
+1. Split the dataset into smaller chunks by running the first half of the
+   `split_and_merge_input_file.ipynb` script. Within this script is the option
+   to set the amount of chunks. If the records aren't split evenly, the last
+   chunk might be smaller than the others.
+2. For each chunk, create a copy of the `chunk_0.py` file, and place it in the
+   `split` folder. Change the name `chunk_0.py` to `chunk_1.py`, `chunk_2.py`,
+   etc, for each created chunk. Within each file, change `script_number` = "0"
+   to `script_number` = "1", `script_number` = "2", etc.
+3. Run each `chunk_*.py` file in the `split` folder simultaneously from a
+   separate console. The script stores the console output to a respective
+   `result_chunk_*.txt` file.
 4. Use the second half of `split_and_merge_input_file.ipynb` to merge the
-results of the `chunk_*.py` scripts.
+   results of the `chunk_*.py` scripts.
 5. The resulting file will be stored in the same way as the
-`crossref_doi_retrieval.ipynb` would.
+   `crossref_doi_retrieval.ipynb` would.
 
 The split folder should look like this:
 ![Split folder](split_example.png)
