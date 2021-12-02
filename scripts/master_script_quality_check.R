@@ -37,8 +37,7 @@ DATA_PATH <- "data/"
 OUTPUT_PATH <- "output/"
 DEDUPLICATED_PATH <- paste0(YOUR_FILE, "_deduplicated.xlsx")
 QUALITY_CHECK_1_PATH <- "-incorrectly-excluded-records.xlsx"
-# TO BE CHANGED WHEN FINAL DATASET IS AVAILABLE:
-QUALITY_CHECK_2_PATH <- "-incorrectly-included-records-preliminary-results.xlsx"
+QUALITY_CHECK_2_PATH <- "-incorrectly-included-records.xlsx"
 
 # IMPORT DEDUPLICATED DATA
 df <- read_xlsx(paste0(OUTPUT_PATH, DEDUPLICATED_PATH))
