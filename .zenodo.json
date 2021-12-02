@@ -42,7 +42,15 @@
 	"related_identifiers": [
 		{
 			"relation": "isPartOf",
-		 	"identifier": "https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42021266297"
+		 	"identifier": "https://doi.org/10.17605/OSF.IO/M5UHY"
+		},
+		{
+			"relation": "isPartOf",
+		 	"identifier": "https://doi.org/10.17605/OSF.IO/3ZNAR"
+		},
+		{
+			"relation": "isPartOf",
+		 	"identifier": "https://doi.org/10.5281/zenodo.5747049"
 		}
 	],
 	"license": "MIT",
