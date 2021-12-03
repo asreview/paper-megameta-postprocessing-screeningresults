@@ -123,8 +123,8 @@ It is possible to improve the speed of the doi retrieval by using the following 
    records aren't split evenly, the last chunk might be smaller than the others.
 2. For each chunk, create a copy of the `chunk_0.py` file, and place it in the
    `split` folder. Change the name `chunk_0.py` to `chunk_1.py`, `chunk_2.py`,
-   etc, for each created chunk. 
-3. Within each file, change `script_number` = "0" to `script_number` = "1", 
+   etc, for each created chunk.
+3. Within each file, change `script_number` = "0" to `script_number` = "1",
    `script_number` = "2", etc.
 4. Run each `chunk_*.py` file in the `split` folder simultaneously from a
    separate console. The script stores the console output to a respective
@@ -193,6 +193,7 @@ A dataset with only those records which have a 1 in anxiety_included_corrected
 -  `change_test_file_names.R` - With this script the filenames of the test files are converted to the empirical datafile names.
 -  `merge_datasets.R` - This script contains a function to merge the datasets. An unique included column is added for each dataset before the merge.
 -  `composite_label.R` - This script contains a function to create a column with the final inclusions.
+- `print_information_datasets.R` - This script contains a function to print information on datasets.
 -  `identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
 -  `deduplicate_doi.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
 -  `quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
