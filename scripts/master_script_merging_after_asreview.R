@@ -23,6 +23,7 @@ library(janitor)   # Deduplication
 # LOAD FUNCTIONS
 source("scripts/merge_datasets.R") # Merges all three input datasets
 source("scripts/composite_label.R") # Adds a column indicating final_inclusions
+source("scripts/print_information_datasets.R") # Function to print information.
 
 # CREATE DIRECTORIES
 ## Output
@@ -39,9 +40,22 @@ OUTPUT_PATH <- "output/"
 
 ## If necessary, change below to your specific path(s):
 # Importing Results Data
+
+#DEPRESSION
 depression <- read_xlsx(paste0(DATA_PATH, "depression", RESULTS_DATA_PATH))
+
+## Printing information, change the `included` if necessary.
+included_excluded(df = depression,name = "depression", included_column = depression$included)
+
+# SUBSTANCE
 substance <- read_xlsx(paste0(DATA_PATH, "substance", RESULTS_DATA_PATH))
+## Printing information, change the `included` if necessary.
+included_excluded(df = substance,name = "substance", included_column = substance$included)
+
+# ANXIETY
 anxiety <- read_xlsx(paste0(DATA_PATH, "anxiety", RESULTS_DATA_PATH))
+## Printing information, change the `included` if necessary.
+included_excluded(df = anxiety,name = "anxiety", included_column = anxiety$included)
 
 ##### DATA WRANGLING ######
 
@@ -51,8 +65,13 @@ df <- merge_datasets(depression, substance, anxiety)
 
 # FINAL INCLUSIONS
 ## Next, let's add a column of composite_label.
-## Composite_label simply indicates whether the record was included.
+## Composite_label simply indicates whether the record was included in at least
+## one subject.
 df <- composite_label(df)
+
+## Print information
+included_excluded(df = df,name = "merged", included_column = df$composite_label)
+
 
 #### PREPARE FOR EXPORT TO DOI RETRIEVAL ####
 
