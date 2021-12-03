@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/416328702.svg)](https://zenodo.org/badge/latestdoi/416328702)
+
+
 # Scripts for Post-Processing Mega-Meta Results
 
 The repository is part of the so-called, Mega-Meta study on reviewing factors
