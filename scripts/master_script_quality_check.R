@@ -89,12 +89,36 @@ df <- quality_check(df)
 ## Check how many values were changed
 
 # Quality check 1:
-print(paste("The number of changed labels through quality check 1 (irrelevant turned relevant) is",
-length(which(!is.na(df$`quality_check_1(0->1)`)))))
+cat(
+  paste0(
+    "The number of changed labels through quality check 1 (irrelevant turned relevant) is ",
+    nrow(df %>% filter(!is.na(
+      `quality_check_1(0->1)`
+    ))),
+    # number of changed labels.
+    " (",
+    round(nrow(df %>% filter(
+      !is.na(`quality_check_1(0->1)`)
+    )) / nrow(df) * 100, 2),
+    "%)." # percentage of changed labels.
+  )
+)
 
 # Quality check 2:
-print(paste("The number of changed labels through quality check 2 (relevant turned irrelevant) is",
-length(which(!is.na(df$`quality_check_2(1->0)`)))))
+cat(
+  paste0(
+    "The number of changed labels through quality check 2 (relevant turned irrelevant) is ",
+    nrow(df %>% filter(!is.na(
+      `quality_check_2(1->0)`
+    ))),
+    # number of changed labels.
+    " (",
+    round(nrow(df %>% filter(
+      !is.na(`quality_check_2(1->0)`)
+    )) / nrow(df) * 100, 2),
+    "%)." # percentage of changed labels.
+  )
+)
 
 #### Preparation for exportation ####
 

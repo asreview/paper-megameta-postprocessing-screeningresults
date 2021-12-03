@@ -219,14 +219,18 @@ deduplicate_doi <- function(df, megameta) {
   
   # Print information about the deduplication process
   cat(
-    paste(
-      "In total",
+    paste0(
+      "In total ",
       max(doi_set$dup_id),
-      "sets were deduplicated based on doi, of which: \n",
+      " sets were deduplicated based on doi, of which: \n",
       n_labeled_dupes,
-      "sets had at least one label \n",
+      " (",
+      round(n_labeled_dupes/max(doi_set$dup_id)*100, 2),
+      "%) sets had at least one label. \n",
       n_no_label_dupes,
-      "sets had no label at all \n"
+      " (",
+      round(n_no_label_dupes/max(doi_set$dup_id)*100, 2),
+      "%) sets had no label at all."
     )
   )
   

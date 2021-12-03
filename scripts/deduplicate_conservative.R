@@ -334,21 +334,23 @@ deduplicate_conservative <- function(df,
     } # Close else statement for megameta = FALSE
       
     # Print information about the deduplication process
-      cat(
-        paste(
-          "In total",
-          max(dup_sets$dup_id),
-          "sets were deduplicated conservatively, of which: \n",
-          n_labeled_dupes,
-          "sets had at least one label \n",
-          n_no_label_dupes,
-          "sets had no label at all \n"
-        )
+    cat(
+      paste0(
+        "In total ",
+        max(doi_set$dup_id),
+        " sets were deduplicated conservatively (based on ",
+        all_cons_cols, 
+        ") of which: \n",
+        n_labeled_dupes,
+        " (",
+        round(n_labeled_dupes/max(doi_set$dup_id)*100, 2),
+        "%) sets had at least one label \n",
+        n_no_label_dupes,
+        " (",
+        round(n_no_label_dupes/max(doi_set$dup_id)*100, 2),
+        "%) sets had no label at all."
       )
-      
-      return(df)
-
-      # In case there are no identified duplicates through the conservative way:
+    )# In case there are no identified duplicates through the conservative way:
       
     } else {
       
