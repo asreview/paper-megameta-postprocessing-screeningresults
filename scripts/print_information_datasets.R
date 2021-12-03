@@ -5,8 +5,11 @@ info_datasets <- function (df,name, included_column){
   
   cat(paste0("The ", name, " dataset contains ", nrow(df), " records.\n",
             "Of which there are: \n", 
-            nrow(df %>% filter(included_column == 1)), " included records. \n", # number of included records
-            nrow(df %>% filter(included_column == 0)), " excluded records.", # number of excluded records
+            nrow(df %>% filter(included_column == 1))," (", # number of included records
+            nrow(df %>% filter(included_column == 1))/nrow(df)*100, "%) included records. \n", # percentage of included records
+            nrow(df %>% filter(included_column == 0)), " (", # number of excluded records
+            nrow(df %>% filter(included_column == 0))/nrow(df)*100,"%) excluded records.", # percentage of excluded records
+            
             "\n \n",
             "This dataset also contains:\n",
             nrow(df %>% filter(!is.na(title))), "/", nrow(df), " titles, which is ", # number of titles
