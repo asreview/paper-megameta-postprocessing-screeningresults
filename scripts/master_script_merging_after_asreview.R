@@ -45,17 +45,17 @@ OUTPUT_PATH <- "output/"
 depression <- read_xlsx(paste0(DATA_PATH, "depression", RESULTS_DATA_PATH))
 
 ## Printing information, change the `included` if necessary.
-included_excluded(df = depression,name = "depression", included_column = depression$included)
+info_datasets(df = depression, name = "depression", included_column = depression$included)
 
 # SUBSTANCE
 substance <- read_xlsx(paste0(DATA_PATH, "substance", RESULTS_DATA_PATH))
 ## Printing information, change the `included` if necessary.
-included_excluded(df = substance,name = "substance", included_column = substance$included)
+info_datasets(df = substance, name = "substance", included_column = substance$included)
 
 # ANXIETY
 anxiety <- read_xlsx(paste0(DATA_PATH, "anxiety", RESULTS_DATA_PATH))
 ## Printing information, change the `included` if necessary.
-included_excluded(df = anxiety,name = "anxiety", included_column = anxiety$included)
+info_datasets(df = anxiety, name = "anxiety", included_column = anxiety$included)
 
 ##### DATA WRANGLING ######
 
@@ -70,7 +70,7 @@ df <- merge_datasets(depression, substance, anxiety)
 df <- composite_label(df)
 
 ## Print information
-included_excluded(df = df,name = "merged", included_column = df$composite_label)
+info_datasets(df = df, name = "merged", included_column = df$composite_label)
 
 
 #### PREPARE FOR EXPORT TO DOI RETRIEVAL ####
