@@ -113,6 +113,9 @@ back in the Rproject in Rstudio. This result is stored in `/output`: `megameta_a
 This script uses the deduplicated dataset as input and performs 2 quality checks:
     1. Change the labels of incorrectly excluded records to included.
     2. Change the labels of incorrectly included records to excluded.
+This script also calls the function `deduplicate_for_q-check_titles.R` to
+deduplicate records based on title for those records that were present in the
+`incorrectly-included` or `incorrectly-excluded` dataset.
 It results in corrected columns for both the subject- and the composite-label.
 5. OPTIONAL: Create ASReview plugin-ready data by running the script `master_script_process_data_for_asreview_plugin.R`.
 This script creates a new folder in the output folder, `data_for_plugin`, containing several versions
