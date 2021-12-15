@@ -60,6 +60,9 @@ df[, cols_to_num] <-
         function(x)
           as.numeric(as.character(x)))
 
+## Moreover, some columns are created which are redundant:
+df <- df[, 4:ncol(df)]
+
 ##########################################################
 ############ END MEGAMETA SPECIFIC PART ##################
 
@@ -87,6 +90,8 @@ df <- identify_duplicates(df)
 ## of TRUE
 
 df <- deduplicate_doi(df = df, megameta = TRUE) 
+df_doi_deduplicated <- df
+
 
 #  CONSERVATIVE DEDUPLICATION
 ## The defaults for the conservative deduplication are set to the 
