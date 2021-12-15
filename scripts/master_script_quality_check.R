@@ -120,6 +120,12 @@ cat(
   )
 )
 
+## Counting final values 
+# Number of relevant records
+sum(df$composite_label_corrected, na.rm = T)
+# Number of seen records
+df %>% filter(!is.na(composite_label_corrected)) %>% nrow()
+
 #### Preparation for exportation ####
 
 # SORTING
