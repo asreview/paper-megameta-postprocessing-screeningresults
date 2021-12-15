@@ -337,21 +337,22 @@ deduplicate_conservative <- function(df,
     cat(
       paste0(
         "In total ",
-        max(doi_set$dup_id),
+        max(dup_sets$dup_id),
         " sets were deduplicated conservatively (based on ",
-        all_cons_cols, 
+        paste(all_cons_cols, collapse = " "), 
         ") of which: \n",
         n_labeled_dupes,
         " (",
-        round(n_labeled_dupes/max(doi_set$dup_id)*100, 2),
+        round(n_labeled_dupes/max(dup_sets$dup_id)*100, 2),
         "%) sets had at least one label \n",
         n_no_label_dupes,
         " (",
-        round(n_no_label_dupes/max(doi_set$dup_id)*100, 2),
+        round(n_no_label_dupes/max(dup_sets$dup_id)*100, 2),
         "%) sets had no label at all."
       )
     )# In case there are no identified duplicates through the conservative way:
-      
+      return(df)  
+    
     } else {
       
       cat(paste(

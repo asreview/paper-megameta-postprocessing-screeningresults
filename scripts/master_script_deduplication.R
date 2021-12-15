@@ -90,9 +90,8 @@ df <- identify_duplicates(df)
 ## of TRUE
 
 df <- deduplicate_doi(df = df, megameta = TRUE) 
-df_doi_deduplicated <- df
-
-
+# df_doi_deduplicated <- df
+df <- df_doi_deduplicated
 #  CONSERVATIVE DEDUPLICATION
 ## The defaults for the conservative deduplication are set to the 
 ## conservative deduplication strategy of the Megameta project. 
@@ -135,6 +134,7 @@ sum(df$depression_included, na.rm = T)
 sum(df$substance_included, na.rm = T)
 sum(df$anxiety_included, na.rm = T)
 sum(df$composite_label, na.rm = T)
+df %>% filter(!is.na(composite_label)) %>% nrow()
 
 ##########################################################
 ############ END MEGAMETA SPECIFIC PART ##################
