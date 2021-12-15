@@ -110,10 +110,14 @@ The output from the doi retrieval is stored in `/output`:
 3. For the deduplication part, open and run `scripts/master_script_deduplication.R`
 back in the Rproject in Rstudio. This result is stored in `/output`: `megameta_asreview_deduplicated.xslx`
 4. To correct labels based on two quality checks, run `master_script_quality_check.R`.
-This script uses the deduplicated dataset as input and performs 2 quality checks:
+This script also calls the function `deduplicate_for_q-check_titles.R` to
+deduplicate records based on title for those records that were present in the
+`incorrectly-included` or `incorrectly-excluded` dataset.
+Then 2 quality checks are performed:
     1. Change the labels of incorrectly excluded records to included.
-    2. Change the labels of incorrectly included records to excluded.
-It results in corrected columns for both the subject- and the composite-label.
+    2. Change the labels of incorrectly included records to excluded.  
+   
+   It results in corrected columns for both the subject- and the composite-label.
 5. OPTIONAL: Create ASReview plugin-ready data by running the script `master_script_process_data_for_asreview_plugin.R`.
 This script creates a new folder in the output folder, `data_for_plugin`, containing several versions
 of the dataset created from step 4. See [Data for the ASReview plugin](#data-for-the-asreview-plugin) for more information.
