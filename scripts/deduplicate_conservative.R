@@ -78,12 +78,8 @@ deduplicate_conservative <- function(df,
     cons_2 <-
       df_1_journal %>% get_dupes(c(secondary_title, all_of(less_conservative_cols)))
     
-    ## Find the symmetric differences between cons_1 and cons_2
-    symdiff <- function(x, y) {
-      setdiff(union(x, y), intersect(x, y))
-    } # close function
-    
-    cons_dupes <- unique(symdiff(cons_1, cons_2))
+    ## Merge cons_1 and cons_2, as a full join
+    cons_dupes <- merge(cons_1, cons_2, all = TRUE)
     
     ## Still there might be some index values duplicated.
     ## Indexes cannot contain duplicates, because they were uniquely assigned
