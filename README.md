@@ -101,9 +101,8 @@ To get started:
 ## Running the complete pipeline
 
 1. Open the `pre-processing.Rproject` in Rstudio and run the `master_script_merging_after_asreview.R` to merge the datasets.
-At the end of the merging script, the file `megameta_merged_merged.xlsx` is created and saved in `/output`.
-2. Run the `scripts/crossref_doi_retrieval.ipynb` in jupyter notebook to retrieve the missing doi's.
-The output from the doi retrieval is stored in `/output`:
+At the end of the merging script, the file `megameta_asreview_merged.xlsx` is created and saved in `/output`.
+2. Run the `scripts/crossref_doi_retrieval.ipynb` in [jupyter notebook](https://jupyter.org/install) to retrieve the missing doi's (you might need to install the package tqdm first: `pip install tqdm`). The output from the doi retrieval is stored in `/output`:
    `megameta_asreview_doi_retrieved.xlsx`. Note: This step might take some time!
    To significantly decrease run time, follow the steps in the [Improving DOI retrieval
    speed](#Improving-DOI-retrieval-speed) section.
