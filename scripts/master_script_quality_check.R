@@ -23,6 +23,8 @@ library(janitor)   # Deduplication
 # LOADING NECESSARY FUNCTIONS
 source("scripts/deduplicate_for_q-check_titles.R") # Deduplication and merging based on titles for the quality checks
 source("scripts/quality_check.R") # Adding columns with corrected values.
+source("scripts/print_information_datasets.R") # Function to print information.
+
 
 # CREATING DIRECTORIES
 ## Output
