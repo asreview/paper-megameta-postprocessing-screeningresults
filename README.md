@@ -52,12 +52,12 @@ will now have the same file names as those of the empirical data.
 To check whether the pipeline worked correctly on the test data, check the following
 values in the output:
 
-- Within the `crossref_doi_retrieval.ipynb` script 33/38 doi's should be retrieved.
+- Within the `crossref_doi_retrieval.ipynb` script 33/42 doi's should be retrieved.
 - After deduplication in `master_script_deduplication.R` the total number of relevant papers
-(sum of the values in the composite_label column) should be 20.
+(sum of the values in the composite_label column) should be 21.
 - After running the quality_check function in  `master_script_quality_check.R` the number of changed labels
 should be:
-  - Quality check 1: 6
+  - Quality check 1: 7
   - Quality check 2: 6
 
 ### Empirical Data
@@ -116,7 +116,7 @@ deduplicate records based on title for those records that were present in the
 Then 2 quality checks are performed:
     1. Change the labels of incorrectly excluded records to included.
     2. Change the labels of incorrectly included records to excluded.  
-   
+
    It results in corrected columns for both the subject- and the composite-label.
 5. OPTIONAL: Create ASReview plugin-ready data by running the script `master_script_process_data_for_asreview_plugin.R`.
 This script creates a new folder in the output folder, `data_for_plugin`, containing several versions
