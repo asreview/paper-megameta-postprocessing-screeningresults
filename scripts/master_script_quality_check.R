@@ -122,7 +122,8 @@ cat(
 
 ## Counting final values 
 # Number of relevant records
-sum(df$composite_label_corrected, na.rm = T)
+info_datasets(df = df, name = "quality_checked", included_column = df$composite_label_corrected)
+
 # Number of seen records
 df %>% filter(!is.na(composite_label_corrected)) %>% nrow()
 

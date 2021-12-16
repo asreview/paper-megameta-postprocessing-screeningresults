@@ -164,13 +164,13 @@ deduplicate_q_check <- function(df, error_set){
     
     
     } # close checking whether the duplicate is a duplicate
-  
+    
   } # close for loop
 
   cat(
     paste0(
       "In total ",
-      max(dup_set$dup_id),
+      n_labeled_dupes + n_no_label_dupes,
       " sets were deduplicated based on title for ", error_set_name, " of which: \n",
       n_labeled_dupes,
       " (",

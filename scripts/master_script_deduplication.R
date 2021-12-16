@@ -24,6 +24,7 @@ library(janitor)   # Deduplication
 source("scripts/identify_duplicates.R") # Identifies duplicates
 source("scripts/deduplicate_doi.R") # Deduplication and merging rows based on doi
 source("scripts/deduplicate_conservative.R") # an extra round of conservative deduplication
+source("scripts/print_information_datasets.R") # Function to print information.
 
 # CREATING DIRECTORIES
 ## Output
@@ -96,6 +97,8 @@ df <- deduplicate_doi(df = df, megameta = TRUE)
 ## Temporarily save the doi_deduplicated data
 df_doi_deduplicated <- df
 
+info_datasets(df = df, name = "doi_deduplicated", included_column = df$composite_label)
+
 ## If anything goes awry, uncomment command below to get back to this state.
 ## df <- df_doi_deduplicated
 
@@ -140,9 +143,10 @@ df <- deduplicate_conservative(
 sum(df$depression_included, na.rm = T)
 sum(df$substance_included, na.rm = T)
 sum(df$anxiety_included, na.rm = T)
-sum(df$composite_label, na.rm = T)
+
 df %>% filter(!is.na(composite_label)) %>% nrow()
 
+info_datasets(df = df, name = "deduplicated", included_column = df$composite_label)
 ##########################################################
 ############ END MEGAMETA SPECIFIC PART ##################
 
