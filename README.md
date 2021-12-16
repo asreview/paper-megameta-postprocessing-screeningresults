@@ -57,7 +57,7 @@ values in the output:
 (sum of the values in the composite_label column) should be 21.
 - After running the quality_check function in  `master_script_quality_check.R` the number of changed labels
 should be:
-  - Quality check 1: 8
+  - Quality check 1: 7
   - Quality check 2: 6
 
 ### Empirical Data
