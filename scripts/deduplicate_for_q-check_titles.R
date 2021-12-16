@@ -14,6 +14,13 @@
 
 deduplicate_q_check <- function(df, error_set){
 
+  # CREATE COUNTERS FOR NUMBER OF DUPLICATES
+  n_labeled_dupes <- 0
+  n_no_label_dupes <-  0
+  
+  # COLLECT THE NAME OF THE DATASET THAT IS CURRENTLY CHECKED
+  error_set_name <- deparse(substitute(error_set))
+  
   # First make sure that there are no empty titles
   ## If there are, they should be replaced with NA
   error_set$title <- ifelse(str_length(error_set$title) < 2, NA, error_set$title) 
@@ -29,7 +36,7 @@ deduplicate_q_check <- function(df, error_set){
  
   # find the duplicated titles
   df_dup <- get_dupes(df_partly, title)
-  
+
   # Add an indicator for each set of duplicates
   title_set <- df_dup %>% 
     group_by(title) %>%
@@ -40,6 +47,18 @@ deduplicate_q_check <- function(df, error_set){
     
     # select a pair of duplicates
     dup_set <- title_set[which(title_set$dup_id == i),] 
+    
+    # Check manually whether the records are indeed duplicates
+    cat("Possibly duplicated titles:\n", paste0(dup_set$title, collapse = "\n"), "\n \n",
+          "Abstract:\n", paste0(dup_set$abstract, collapse = "\n \n"), "\n \n",
+          "Authors:\n", paste0(dup_set$authors, collapse = "\n \n"), "\n \n",
+          "Year:\n", paste0(dup_set$year, collapse = "\n"), "\n \n",
+          "Journal:\n", paste0(dup_set$secondary_title, collapse = "\n"))
+    
+    input_user <- readline(prompt = "Is this an actual duplicate? Y or N?" )
+    input_user <- str_to_lower(as.character(input_user))
+    
+    if (input_user == "y"){ 
     
     # determine the row of the set to which all information
     # of the duplicates will be saved (the one with the longest abstract)
@@ -130,22 +149,50 @@ deduplicate_q_check <- function(df, error_set){
       # REMOVE DUPLICATE ROW(S)
       df <- df[-which(df$index %in% remove_index), ]
       
+      # ADD ONE TO COUNTER OF LABELED DUPES
+      n_labeled_dupes <- n_labeled_dupes + 1
+      
     } else {
       
       # If none of the duplicates have received any label, deduplication is easy!
       # The rows which can be removed according to remove_index can simply be deleted:
       df <- df[-which(df$index %in% remove_index),]
       
-    } # close else statement
+      # ADD ONE TO COUNTER OF UNLABELED DUPES
+      n_no_label_dupes <- n_no_label_dupes + 1
+     } # close else statement
+    
+    
+    } # close checking whether the duplicate is a duplicate
     
   } # close for loop
+
+  cat(
+    paste0(
+      "In total ",
+      n_labeled_dupes + n_no_label_dupes,
+      " sets were deduplicated based on title for ", error_set_name, " of which: \n",
+      n_labeled_dupes,
+      " (",
+      round(n_labeled_dupes/max(dup_set$dup_id)*100, 2),
+      "%) sets had at least one label \n",
+      n_no_label_dupes,
+      " (",
+      round(n_no_label_dupes/max(dup_set$dup_id)*100, 2),
+      "%) sets had no label at all.\n"
+    )
+  ) 
+  
+  return(df)
   
   } else {
+    
+    cat(paste(
+      "No duplicates identified and removed through title deduplication for", error_set_name, ".\n"
+    ))
     
     return(df)
     
   } # close else statement to check whether there are any duplicates
-  
-  return(df)
   
 } # close deduplication function

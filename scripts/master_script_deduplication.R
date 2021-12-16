@@ -24,6 +24,7 @@ library(janitor)   # Deduplication
 source("scripts/identify_duplicates.R") # Identifies duplicates
 source("scripts/deduplicate_doi.R") # Deduplication and merging rows based on doi
 source("scripts/deduplicate_conservative.R") # an extra round of conservative deduplication
+source("scripts/print_information_datasets.R") # Function to print information.
 
 # CREATING DIRECTORIES
 ## Output
@@ -60,6 +61,11 @@ df[, cols_to_num] <-
         function(x)
           as.numeric(as.character(x)))
 
+
+### NOT FOR TEST FILES ###
+## Moreover, some columns are created which are redundant:
+df <- df[, 4:ncol(df)]
+
 ##########################################################
 ############ END MEGAMETA SPECIFIC PART ##################
 
@@ -87,6 +93,14 @@ df <- identify_duplicates(df)
 ## of TRUE
 
 df <- deduplicate_doi(df = df, megameta = TRUE) 
+
+## Temporarily save the doi_deduplicated data
+df_doi_deduplicated <- df
+
+info_datasets(df = df, name = "doi_deduplicated", included_column = df$composite_label)
+
+## If anything goes awry, uncomment command below to get back to this state.
+## df <- df_doi_deduplicated
 
 #  CONSERVATIVE DEDUPLICATION
 ## The defaults for the conservative deduplication are set to the 
@@ -129,8 +143,10 @@ df <- deduplicate_conservative(
 sum(df$depression_included, na.rm = T)
 sum(df$substance_included, na.rm = T)
 sum(df$anxiety_included, na.rm = T)
-sum(df$composite_label, na.rm = T)
 
+df %>% filter(!is.na(composite_label)) %>% nrow()
+
+info_datasets(df = df, name = "deduplicated", included_column = df$composite_label)
 ##########################################################
 ############ END MEGAMETA SPECIFIC PART ##################
 

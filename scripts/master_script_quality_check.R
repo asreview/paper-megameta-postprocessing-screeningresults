@@ -23,6 +23,8 @@ library(janitor)   # Deduplication
 # LOADING NECESSARY FUNCTIONS
 source("scripts/deduplicate_for_q-check_titles.R") # Deduplication and merging based on titles for the quality checks
 source("scripts/quality_check.R") # Adding columns with corrected values.
+source("scripts/print_information_datasets.R") # Function to print information.
+
 
 # CREATING DIRECTORIES
 ## Output
@@ -119,6 +121,13 @@ cat(
     "%)." # percentage of changed labels.
   )
 )
+
+## Counting final values 
+# Number of relevant records
+info_datasets(df = df, name = "quality_checked", included_column = df$composite_label_corrected)
+
+# Number of seen records
+df %>% filter(!is.na(composite_label_corrected)) %>% nrow()
 
 #### Preparation for exportation ####
 

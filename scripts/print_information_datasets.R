@@ -6,9 +6,9 @@ info_datasets <- function (df,name, included_column){
   cat(paste0("The ", name, " dataset contains ", nrow(df), " records.\n",
             "Of which there are: \n", 
             nrow(df %>% filter(included_column == 1))," (", # number of included records
-            nrow(df %>% filter(included_column == 1))/nrow(df)*100, "%) included records. \n", # percentage of included records
+            round(nrow(df %>% filter(included_column == 1))/nrow(df)*100,2), "%) included records. \n", # percentage of included records
             nrow(df %>% filter(included_column == 0)), " (", # number of excluded records
-            nrow(df %>% filter(included_column == 0))/nrow(df)*100,"%) excluded records.", # percentage of excluded records
+            round(nrow(df %>% filter(included_column == 0))/nrow(df)*100,2),"%) excluded records.", # percentage of excluded records
             
             "\n \n",
             "This dataset also contains:\n",

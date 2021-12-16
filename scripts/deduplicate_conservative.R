@@ -78,12 +78,8 @@ deduplicate_conservative <- function(df,
     cons_2 <-
       df_1_journal %>% get_dupes(c(secondary_title, all_of(less_conservative_cols)))
     
-    ## Find the symmetric differences between cons_1 and cons_2
-    symdiff <- function(x, y) {
-      setdiff(union(x, y), intersect(x, y))
-    } # close function
-    
-    cons_dupes <- unique(symdiff(cons_1, cons_2))
+    ## Merge cons_1 and cons_2, as a full join
+    cons_dupes <- merge(cons_1, cons_2, all = TRUE)
     
     ## Still there might be some index values duplicated.
     ## Indexes cannot contain duplicates, because they were uniquely assigned
@@ -337,21 +333,22 @@ deduplicate_conservative <- function(df,
     cat(
       paste0(
         "In total ",
-        max(doi_set$dup_id),
+        max(dup_sets$dup_id),
         " sets were deduplicated conservatively (based on ",
-        all_cons_cols, 
+        paste(all_cons_cols, collapse = " "), 
         ") of which: \n",
         n_labeled_dupes,
         " (",
-        round(n_labeled_dupes/max(doi_set$dup_id)*100, 2),
+        round(n_labeled_dupes/max(dup_sets$dup_id)*100, 2),
         "%) sets had at least one label \n",
         n_no_label_dupes,
         " (",
-        round(n_no_label_dupes/max(doi_set$dup_id)*100, 2),
+        round(n_no_label_dupes/max(dup_sets$dup_id)*100, 2),
         "%) sets had no label at all."
       )
     )# In case there are no identified duplicates through the conservative way:
-      
+      return(df)  
+    
     } else {
       
       cat(paste(
