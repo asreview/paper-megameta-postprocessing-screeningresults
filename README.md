@@ -53,7 +53,7 @@ To check whether the pipeline worked correctly on the test data, check the follo
 values in the output:
 
 - Within the `crossref_doi_retrieval.ipynb` script 33/42 doi's should be retrieved.
-- After deduplication in `master_script_deduplication.R` the total number of relevant papers
+- After two rounds of deduplication in `master_script_deduplication.R` the total number of relevant papers
 (sum of the values in the composite_label column) should be 21.
 - After running the quality_check function in  `master_script_quality_check.R` the number of changed labels
 should be:
