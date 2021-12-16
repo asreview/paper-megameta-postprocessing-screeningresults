@@ -56,9 +56,9 @@ deduplicate_q_check <- function(df, error_set){
           "Journal:\n", paste0(dup_set$secondary_title, collapse = "\n"))
     
     input_user <- readline(prompt = "Is this an actual duplicate? Y or N?" )
-    input_user <- as.character(input_user)
+    input_user <- str_to_lower(as.character(input_user))
     
-    if (input_user == "Y"){ 
+    if (input_user == "y"){ 
     
     # determine the row of the set to which all information
     # of the duplicates will be saved (the one with the longest abstract)
