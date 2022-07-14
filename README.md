@@ -266,8 +266,6 @@ columns have been added:
 - `composite_label_corrected` (0, 1, NA):
   A column indicating whether a record was included in at least one of the
   corrected_subject columns: The results after taking the quality checks into account.
-- `data_extracted` (0, 1, NA):
-  An empty column to be filled manually about which records have been extracted.
 
 For all columns where there are only 0's 1's and NA's, a `0` indicates a negative
 (excluded for example), while `1` indicates a positive (included for example). `NA`
