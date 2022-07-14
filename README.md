@@ -108,15 +108,33 @@ At the end of the merging script, the file `megameta_asreview_merged.xlsx` is cr
    speed](#Improving-DOI-retrieval-speed) section.
 3. For the deduplication part, open and run `scripts/master_script_deduplication.R`
 back in the Rproject in Rstudio. This result is stored in `/output`: `megameta_asreview_deduplicated.xslx`
-4. To correct labels based on two quality checks, run `master_script_quality_check.R`.
-This script also calls the function `deduplicate_for_q-check_titles.R` to
-deduplicate records based on title for those records that were present in the
-`incorrectly-included` or `incorrectly-excluded` dataset.
-Then 2 quality checks are performed:
-    1. Change the labels of incorrectly excluded records to included.
-    2. Change the labels of incorrectly included records to excluded.  
-
-   It results in corrected columns for both the subject- and the composite-label.
+4. Two quality checks are performed. Manually change the labels
+    1. of incorrectly excluded records to included.
+    2. of incorrectly included records to excluded.  
+   The data which should be corrected is available on DANS. 
+   This step should add the following columns to the dataset:
+- `quality_check_1(0->1)` (1, 2, 3, NA):
+  This column indicates for which subjects a record was falsely excluded:
+  - 1 = anxiety
+  - 2 = depression
+  - 3 = substance-abuse
+- `quality_check_2(1->0)` (1, 2, 3, NA):
+  This column indicates for which subjects a record was falsely included:
+  - 1 = anxiety
+  - 2 = depression
+  - 3 = substance-abuse
+- `depression_included_corrected` (0, 1, NA):
+  Combining the information from the depression_included and quality_check columns,
+  this column contains the inclusion/exclusion/not seen labels after correction.
+- `substance_included_corrected` (0, 1, NA):
+    Combining the information from the substance_included and quality_check columns,
+    this column contains the inclusion/exclusion/not seen labels after correction.
+- `anxiety_included_corrected` (0, 1, NA):
+  Combining the information from the anxiety_included and quality_check columns,
+  this column contains the inclusion/exclusion/not seen labels after correction.
+- `composite_label_corrected` (0, 1, NA):
+  A column indicating whether a record was included in at least one of the
+  corrected_subject columns: The results after taking the quality checks into account.
 5. OPTIONAL: Create ASReview plugin-ready data by running the script `master_script_process_data_for_asreview_plugin.R`.
 This script creates a new folder in the output folder, `data_for_plugin`, containing several versions
 of the dataset created from step 4. See [Data for the ASReview plugin](#data-for-the-asreview-plugin) for more information.
@@ -202,8 +220,6 @@ A dataset with only those records which have a 1 in anxiety_included_corrected
 - `print_information_datasets.R` - This script contains a function to print information on datasets.
 -  `identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
 -  `deduplicate_doi.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
--  `quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
--  `deduplicate_for_q-check_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
 -  `deduplicate_conservative.R` - this script contains a function to deduplicate the records in a  conservative way based on title, author, year and journal/issn
 
 ## Result
