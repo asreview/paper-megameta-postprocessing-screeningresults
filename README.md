@@ -220,8 +220,6 @@ A dataset with only those records which have a 1 in anxiety_included_corrected
 - `print_information_datasets.R` - This script contains a function to print information on datasets.
 -  `identify_duplicates.R` - This script contains a function to identify duplicate records in the dataset.
 -  `deduplicate_doi.R` - This script contains a function to deduplicate the records, based on doi, while maintaining all information.
--  `quality_check.R` - This script corrects those labels which were incorrect according to 2 quality checks: Quality check 1 (incorrectly assigned irrelevant), Quality check 2 (incorrectly assigned relevant).
--  `deduplicate_for_q-check_titles.R` - This script is used in the `quality_check.R` to deduplicate the records from the quality check based on title.
 -  `deduplicate_conservative.R` - this script contains a function to deduplicate the records in a  conservative way based on title, author, year and journal/issn
 
 ## Result
