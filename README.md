@@ -108,7 +108,7 @@ At the end of the merging script, the file `megameta_asreview_merged.xlsx` is cr
    speed](#Improving-DOI-retrieval-speed) section.
 3. For the deduplication part, open and run `scripts/master_script_deduplication.R`
 back in the Rproject in Rstudio. This result is stored in `/output`: `megameta_asreview_deduplicated.xslx`
-4. Two quality checks are performed. Manually change the labels
+4. [Two quality checks are performed](https://github.com/asreview/paper-megameta-postprocessing-screeningresults/issues/41). Manually change the labels
     1. of incorrectly excluded records to included.
     2. of incorrectly included records to excluded.  
    The data which should be corrected is available on DANS. 
